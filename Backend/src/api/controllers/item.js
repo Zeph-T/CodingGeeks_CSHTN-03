@@ -18,3 +18,24 @@ export async function filterStringsToArrays(req,res){
     })
     return res.status(200).send({message : 'Success'});
 }
+
+
+/*
+    let text = req.query.search;
+    categoryPromise = function()
+    namePromise = function()
+    Promise.all([categoryPromise,namePromise]).then(data=>{
+        [[{},{}],[{},{}]]
+    })
+*/
+
+
+/*
+    {
+        category1 : [{},{},{},{},{}],
+        category2 : [{},{},{},{},{}],
+        category3 : [{},{},{},{},{}],
+        category4 : [{},{},{},{},{}],
+        category5 : [{},{},{},{},{}]
+    }
+*/

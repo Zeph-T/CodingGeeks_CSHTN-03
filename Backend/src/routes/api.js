@@ -6,6 +6,6 @@ module.exports = (router)=>{
         res.status(200);
         return res.json({status : "Up and Running"});
     });
-    router.post('/getItemsForHomePage',userApi.signup);
+    // router.get('/items',itemApi.getItems);
     // router.get('/convertArray',itemApi.filterStringsToArrays);
 }
