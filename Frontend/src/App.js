@@ -10,10 +10,26 @@ import Activate from './components/Auth/Activation';
 import Navbar from "./components/Navbar/navbar";
 import ProtectedRoute from "./components/Product/Product";
 import Product from "./components/Product/Product";
+import CustomSnackBar from '../src/components/common/SnackBar';
+
 import "./App.css";
+
 
 function App(props) {
   const [user, setUser] = useState(); // to save user details.
+  const oSnackBar = React.createRef();
+  
+  let openSnackBar = (message) => {
+    if(oSnackBar.current){
+      oSnackBar.current.openSnackBar(message);
+    }
+  }
+  
+  let closeSnackBar = () => {
+    if(oSnackBar.current){
+      oSnackBar.current.closeSnackBar();
+    }
+  }
   useEffect(() => {
     // this function checks if the user is logged in and store details of user object.
     async function Start() {
@@ -29,18 +45,19 @@ function App(props) {
   }, []);
   return (
     <BrowserRouter basename="/">
-      <Navbar user={user} />
+      {user && user._id && <Navbar user={user} /> }
       <Switch>
         {/* All the routes are handled here */}
-        <Route path="/login" {...props} component={Auth} />
-        <Route path="/register" {...props} component={Register} />
-        <Route path="/activateUser" {...props} component={Activate} />
+        <Route path="/login" render={(props)=><Auth openSnackBar={openSnackBar} {...props}/> } />
+        <Route path="/register" render={(props)=><Register openSnackBar={openSnackBar} {...props}/> }  />
+        <Route path="/activateUser" render={(props)=> <Activate {...props} />} />
         <ProtectedRoute
           path="/product/:id"
           render={(props) => <Product {...props} user={user} />}
         />
         <Route path="/logout" exact component={Logout} />
       </Switch>
+      <CustomSnackBar ref={oSnackBar} />
     </BrowserRouter>
   );
 }
