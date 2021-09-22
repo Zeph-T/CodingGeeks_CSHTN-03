@@ -46,18 +46,18 @@ export function signup(req,res){
                                     sendEmail(newUser.email , htmlText,subjectText).then(result=>{
                                         return res.status(200).send({message : 'Verify your Account by Clicking the link send to your Email'});
                                     }).catch(err=>{
-                                        return res.status(400).send({error : err.stack});
+                                        return res.status(200).send({error : err.stack});
                                     })
                                 }
                             })
                         }else{
-                            return res.status(408).send({error : 'Cannot create an Email with this Email!'})
+                            return res.status(200).send({error : 'Cannot create an Email with this Email!'})
                         }
                     }).catch(err=>{
-                        return res.status(400).send({error : err.stack});
+                        return res.status(200).send({error : 'User Already Exists with this Email'});
                     })
                 }else{
-                    return res.status(500).send({error : 'Error Saving the info!'});
+                    return res.status(400).send({error : 'Error Saving the info!'});
                 }
             }).catch(err=>{
                 return res.status(400).send(err.stack);
