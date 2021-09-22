@@ -7,5 +7,5 @@ module.exports = (router)=>{
         return res.json({status : "Up and Running"});
     });
     router.post('/getItemsForHomePage',userApi.signup);
-    router.get('/convertArray',itemApi.filterStringsToArrays);
+    // router.get('/convertArray',itemApi.filterStringsToArrays);
 }

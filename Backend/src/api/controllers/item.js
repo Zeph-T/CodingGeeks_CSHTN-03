@@ -6,6 +6,7 @@ export async function filterStringsToArrays(req,res){
     await Item.find({}).then(async oItems=>{
         await oItems.forEach(oItem=>{
             oItem.categories = oItem.category.split(",")
+            oItem.categories = oItem.categories.map(oString=>oString.replace(/\s+/g, ''));
             oItem.save((err)=>{
                 if(err){
                     console.log(err);
