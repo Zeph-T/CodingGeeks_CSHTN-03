@@ -6,6 +6,6 @@ module.exports = (router)=>{
         return res.json({status : "Up and Running"});
     });
     router.post('/signup',userApi.signup);
+    router.post('/login',userApi.login);
     router.get('/activateUser/:activationToken',userApi.activateToken);
-
 }

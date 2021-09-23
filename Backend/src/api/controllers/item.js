@@ -21,7 +21,8 @@ export async function filterStringsToArrays(req, res) {
 }
 
 export async function getItems(req, res) {
-  let text = req.query.search
+  let text = req.query.search;
+  text = text.replace(' ','');
   const namePromise = Item.find({name : { $regex : text , $options : 'i'}});
   const categoryPromise = Item.find({categories : {$regex :text , $options  : 'i'}});
   Q.all([namePromise, categoryPromise]).then((data, error) => {
@@ -34,28 +35,33 @@ export async function getItems(req, res) {
   })
 }
 
-// export function getItemsForHome(req,res){
-//   let categories = ["EyeCare" , "" , " ", " ", ""];
-//   categories.forEach(items=>{
-//     Item.find
-//   });
-// }
+export async function getItemsForHome(req, res) {
+  try{
+    let categories = ['EyeCare', 'HealthFood', 'SkinCare', 'Ayurveda', 'ProteinSupplements']
+    let final_data = [];
+    await Q.all(categories.map(async(item) => {
+      let data = await Item.find({ categories: { $regex: item, $options: 'i' } }).limit(5)
+          final_data.push({ category: item, items: data });
+      }));
+      return res.status(200).send(final_data);
+  }catch(err){
+    return res.status(400).send({error : err.stack});
+  }
+}
 
-/*
-    let text = req.query.search;
-    categoryPromise = function()
-    namePromise = function()
-    Promise.all([categoryPromise,namePromise]).then(data=>{
-        [[{},{}],[{},{}]]
-    })
-*/
 
-/*
-    {
-        category1 : [{},{},{},{},{}],
-        category2 : [{},{},{},{},{}],
-        category3 : [{},{},{},{},{}],
-        category4 : [{},{},{},{},{}],
-        category5 : [{},{},{},{},{}]
+export function viewAllCategoryItems(req,res){
+  try{
+    if(req.body && req.params.category){
+      Item.find({ categories: { $regex: req.params.category, $options: 'i' } }).then(data=>{
+        return res.status(200).send(data);
+      }).catch(err=>{
+        return res.status(400).send({error : err});
+      })
+    }else{
+      throw 'Required Fields Error'
     }
-*/
+  }catch(err){
+    return res.status(400).send({error : err});
+  }
+}

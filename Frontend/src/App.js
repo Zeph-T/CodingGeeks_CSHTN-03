@@ -13,6 +13,7 @@ import Product from "./components/Product/Product";
 import CustomSnackBar from '../src/components/common/SnackBar';
 
 import "./App.css";
+import { api } from "./utilities";
 
 
 function App(props) {
@@ -35,10 +36,15 @@ function App(props) {
     async function Start() {
       const jwt = localStorage.getItem("token");
       if (jwt) {
-        const user_jwt = jwtDecode(jwt);
-        console.log(user_jwt);
-        const { data } = await http.get(server_url + `users/${user_jwt._id}`);
-        setUser(data);
+        http.get(api.BASE_URL  + api.CHECK_FOR_LOGGED_IN_USER ,{headers : {accesstoken : jwt}}).then(oUser=>{
+          if(oUser){
+            setUser(oUser.data);
+          }
+        }).catch(err=>{
+          console.log(err);
+        });
+      }else{
+        props.history.push('login')
       }
     }
     Start();

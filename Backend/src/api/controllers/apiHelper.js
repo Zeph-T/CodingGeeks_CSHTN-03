@@ -10,7 +10,7 @@ export const oEmailContextTexts = {
     activation : 'You’re almost there!<br>Thank you for signing up with us. Get started with MedZone today! Verify your account clicking on the link below.<br><br><br>'
 }
 export const TokenTypes = {
-  AuthToken : 'authToken',
+  authToken : 'authToken',
   ActivationToken  : 'activationToken'
 }
 
@@ -66,6 +66,57 @@ export const validateUserEmail = (email, checkForExistingUser) => {
     return deferred.promise;
   }
 
+
+  export function validateUser(req,res,user){
+    validateToken(user.authToken , TokenTypes.authToken).then(response=>{
+        if(response.isValid){
+            res.status(200);
+            return res.send(user);
+        }
+    }).catch(function(){
+        user.authToken = jwt.sign({
+            email :  user.email,
+            type:TokenTypes.authToken
+        },ConfigAuth.token.secret,{expiresIn : '10 days'});
+        user.save(function(err){
+            if(err){
+                return res.status(400).send({error:err});
+            }else{
+                res.status(200);
+                return res.send(user);
+            }
+        })
+    })
+}
+
+export function checkForLoggedInUser(req,res){
+  try{
+      if(req.user){
+          let user = req.user;
+          res.status(200);
+          return res.json(user);
+      }else{
+          res.status(400);
+          return res.send({error : 'Not LoggedIn'});
+      }
+  }catch(err){
+      return res.status(400).send({error : err});
+  }
+}
+export function isAuthenticatedUser(req){
+  var deferred = Q.defer();
+  this.validateToken(req.headers.accesstoken,TokenTypes.authToken).then(response=>{
+      if(response.isValid){
+          req.user = response.payload;
+          deferred.resolve(true);
+      }else{
+          deferred.resolve(false);
+      }
+  }).catch(err=>{
+      deferred.resolve(false);
+  })
+  return deferred.promise;
+}
 export function validateToken(token,tokenType,shouldIgnoreExpiration=false){
   var deferred = Q.defer();
   jwt.verify(token,envVariables.jwt_secret,{ignoreExpiration : shouldIgnoreExpiration},(err,decoded)=>{
@@ -80,8 +131,15 @@ export function validateToken(token,tokenType,shouldIgnoreExpiration=false){
             deferred.resolve({isValid : true , payload : decoded})
           }
         })
+      }else if(tokenType === 'authToken'){
+        User.findOne({email : decoded.email}).then(oUser=>{
+          deferred.resolve({isValid : true , payload : oUser});
+        }).catch(err=>{
+          deferred.reject({errors : {name : {message : err.stack}}});
+        })
       }
     }
   })
   return deferred.promise;
 }
+

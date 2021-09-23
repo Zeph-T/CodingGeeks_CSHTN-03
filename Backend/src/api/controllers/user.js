@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
 import  {envVariables} from "../../config/env";
-import { validateUserEmail , oEmailContextTexts, sendEmail ,TokenTypes, validateToken} from "./apiHelper";
+import { validateUserEmail , oEmailContextTexts, sendEmail ,TokenTypes, validateToken,validateUser} from "./apiHelper";
 export function signup(req,res){
     try{
         let userInfo = req.body;
@@ -34,7 +34,7 @@ export function signup(req,res){
                               }, envVariables.jwt_secret, {expiresIn: "100 days"});
                               newUser.authToken = jwt.sign({
                                 email: userInfo.email,
-                                type: TokenTypes.AuthToken
+                                type: TokenTypes.authToken
                               }, envVariables.jwt_secret, {expiresIn: "100 days"});
                             newUser.save(function(err){
                                 if(err){
@@ -81,5 +81,35 @@ export function activateToken(req,res){
     }catch(err){
         console.log(err);
         return res.status(400).send({valid : false});  
+    }
+}
+
+
+
+export function login(req,res){
+    try{
+        let userInfo = req.body;
+        if(!userInfo || !userInfo.email || !userInfo.password){
+            return res.status(400).send({error : 'Missing Fields!'});
+        }
+        User.findOne({
+            email : userInfo.email
+        }).then(user=>{
+            if(!user){
+                return res.status(404).send({error : 'Email Id not found!'});
+            }else if(!user.isActive){
+                return res.status(408).send({error : 'You have not activated your account,Click on the Link sent to your Email'});
+            }
+            else if(user.validPassword(userInfo.password)){
+                validateUser(req,res,user,false);
+            }else{
+                return res.status(404).send({error:'Password Invalid!'});
+            }
+        }).catch(err=>{
+            console.log(err);
+            return res.status(400).send({error : err.stack});
+        })
+    }catch(err){
+        return res.status(400).send({error : err.stack});
     }
 }

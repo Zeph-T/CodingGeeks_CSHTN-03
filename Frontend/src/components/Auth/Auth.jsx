@@ -63,9 +63,11 @@ const SignUp = (props) => {
         if(response.data.error){
           props.openSnackBar(response.data.error)
         }else{
-          localStorage.removeItem('isActivated');
-          localStorage.setItem("token",response.data.token);
-          window.location = '/';
+          // localStorage.removeItem('isActivated');
+          localStorage.setItem("token",response.data.authToken);
+          props.history.entries = [];
+          props.history.index = -1;
+          window.location='/'
         }
         setLoginIsInProgress(false);
       }).catch(err=>{
