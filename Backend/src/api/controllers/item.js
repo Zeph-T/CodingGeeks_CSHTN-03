@@ -1,6 +1,8 @@
 import Item from '../models/item'
 import * as apiHelper from './apiHelper';
 import Q from 'q';
+
+
 export async function filterStringsToArrays(req, res) {
   await Item.find({}).then(async (oItems) => {
     await oItems.forEach((oItem) => {
@@ -12,7 +14,7 @@ export async function filterStringsToArrays(req, res) {
         if (err) {
           console.log(err)
         } else {
-          console.log('Saved Successfully')
+          console.log('Saved Successfully');
         }
       })
     })

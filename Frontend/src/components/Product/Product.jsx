@@ -13,7 +13,8 @@ import { Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import useStyles from "./styles";
 
-const Product = ({ history, match }) => {
+const Product = ({ history, match, user }) => {
+  const [cart, setCart] = useState([]);
   const product = {
     _id: "12142",
     name: "1Mile N95 Travel Safety Kit",
@@ -27,7 +28,8 @@ const Product = ({ history, match }) => {
   const classes = useStyles();
   const [qty, setQty] = useState(1);
   const addToCartHandler = () => {
-    history.push(`/cart/${match.params.id}?qty=${qty}`);
+     
+    history.push(`/cart`);
   };
   const handleSubmit = () => {};
   return (
@@ -65,19 +67,22 @@ const Product = ({ history, match }) => {
             <br />
             <br />
             <div classname="buy-product">
-              <form onSubmit={handleSubmit}>
-                <Form.Control
-                  as="select"
-                  value={qty}
-                  onChange={(e) => setQty(e.target.value)}
-                >
-                  {/* [0, 1, 2, 4]=>5 */}
-                  {[...Array(product.countInStock).keys()].map((x) => (
-                    <option key={x + 1} value={x + 1}>
-                      {x + 1}
-                    </option>
-                  ))}
-                </Form.Control>
+              <form>
+                <div className="row">
+                  <p className="col">Quantity:</p>
+                    <Form.Control
+                      className="count col"
+                      as="select"
+                      value={qty}
+                      onChange={(e) => setQty(e.target.value)}
+                    >
+                      {[...Array(product.quantity).keys()].map((x) => (
+                        <option key={x + 1} value={x + 1}>
+                          {x + 1}
+                        </option>
+                      ))}
+                    </Form.Control>
+                </div>
                 <button
                   type="button"
                   class="btn btn-warning asdf"

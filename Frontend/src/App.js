@@ -11,7 +11,7 @@ import Navbar from "./components/Navbar/navbar";
 import ProtectedRoute from "./components/Product/Product";
 import Product from "./components/Product/Product";
 import CustomSnackBar from '../src/components/common/SnackBar';
-
+import Home from "./components/Home/Home";
 import "./App.css";
 import Search from "./components/Search/Search";
 import { api } from "./utilities";
@@ -63,7 +63,8 @@ function App(props) {
           render={(props) => <Product {...props} user={user} />}
         />
         <Route path="/logout" exact component={Logout} />
-        <Route path="/" exact component={Search} />
+        <Route path="/search" exact component={Search} />
+        <Route path="/" exact component={Home} />
       </Switch>
       <CustomSnackBar ref={oSnackBar} />
     </BrowserRouter>
