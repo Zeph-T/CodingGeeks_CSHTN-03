@@ -6,6 +6,7 @@ import {
   Grid,
   Typography,
   Container,
+  Slide
 } from "@material-ui/core";
 import Joi from "joi-browser";
 import { Alert } from "@material-ui/lab";
@@ -13,13 +14,17 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { ToastContainer, toast } from "react-toastify";
 import useStyles from "./styles";
 import Input from "../common/Input";
-import { signIn } from "../../services/api";
-import { Link } from 'react-router-dom';
-
+import { signUp } from "../../services/api";
+import WrappedButton from "../common/WrappedButton";
+import Logo from '../../static/logo.png'
+import "../../App.css"
+import httpService from "../../services/httpService";
+import { api } from "../../utilities";
 const initialState = { email: "", password: "" };
 
-const SignUp = () => {
+const SignUp = (props) => {
   const [form, setForm] = useState(initialState);
+  const [loginIsInProgress, setLoginIsInProgress] = useState(false);
   const [errors, setErrors] = useState([]);
   const classes = useStyles();
   const schema = {
@@ -32,6 +37,7 @@ const SignUp = () => {
 
   // function to be on submission of a form
   const handleSubmit = async (event) => {
+    setLoginIsInProgress(true);
     const options = { abortEarly: false };
     // finding errors
     let errors = [];
@@ -46,32 +52,46 @@ const SignUp = () => {
       }  
       setErrors(errors);
     }
-    if (errors.length > 0) return;
+    if (errors.length > 0) {
+      setLoginIsInProgress(false);
+      return;
+    }
     event.preventDefault();
     // calling backend services
     try {
-      localStorage.removeItem("isActivated");
-      const { data: jwt }  = await signIn(form);
-      localStorage.setItem("token", jwt);
-      window.location = "/";
+      httpService.post(api.BASE_URL + api.LOGIN_URL,form).then(response=>{
+        if(response.data.error){
+          props.openSnackBar(response.data.error)
+        }else{
+          // localStorage.removeItem('isActivated');
+          localStorage.setItem("token",response.data.authToken);
+          props.history.entries = [];
+          props.history.index = -1;
+          window.location='/'
+        }
+        setLoginIsInProgress(false);
+      }).catch(err=>{
+        props.openSnackBar(err);
+        setLoginIsInProgress(false);
+      })
     } catch (ex) {
       if (ex.response) {
         toast.error(ex.response.data);
       }
+      setLoginIsInProgress(false);
     }
   };
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
   return (
-    <div>
+    <div className="loginform">
       <ToastContainer />
+      <Slide direction="up" in={true} mountOnEnter unmountOnExit>
       <Container component="main" maxWidth="xs">
         <Paper className={classes.paper} elevation={3}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
+        <img style={{maxWidth : '10rem' , width : '100%' , textAlign : 'right'}} src={Logo} />
           <Typography component="h1" variant="h5">
-            Sign In
+            Sign   In
           </Typography>
           {errors.length !== 0 && <Alert severity="error">{errors[0]} </Alert>}
           <form className={classes.form} onSubmit={handleSubmit}>
@@ -89,25 +109,29 @@ const SignUp = () => {
                 type="password"
               />
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              Sign In
-            </Button>
+            <WrappedButton
+                  key="loginButton"
+                  buttonKey="loginButton"
+                  disabled={loginIsInProgress}
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSubmit}
+                  name="Login"
+                  size="large"
+                  style={{ width: "100%",marginTop : '1rem' }}
+                  icon=""
+                />
             <Grid container justify="center">
               <Grid item>
-                <Button>
-                  <Link to="/register">Don't have an account? Sign Up</Link>
+              <Button href="/register">
+                  Don't have an account? Sign Up
                 </Button>
               </Grid>
             </Grid>
           </form>
         </Paper>
       </Container>
+      </Slide>
     </div>
   );
 };

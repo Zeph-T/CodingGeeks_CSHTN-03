@@ -54,3 +54,9 @@
   margin: auto;
   padding: 1.5em;
 }
+
+.loginForm, .signupForm{
+  max-width:30rem;
+  width:100%;
+  max-height: 95%;
+}

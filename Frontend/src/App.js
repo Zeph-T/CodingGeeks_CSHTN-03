@@ -10,32 +10,54 @@ import Activate from './components/Auth/Activation';
 import Navbar from "./components/Navbar/navbar";
 import ProtectedRoute from "./components/Product/Product";
 import Product from "./components/Product/Product";
+import CustomSnackBar from '../src/components/common/SnackBar';
+
 import "./App.css";
 import Search from "./components/Search/Search";
+import { api } from "./utilities";
+
 
 function App(props) {
   const [user, setUser] = useState(); // to save user details.
+  const oSnackBar = React.createRef();
+  
+  let openSnackBar = (message) => {
+    if(oSnackBar.current){
+      oSnackBar.current.openSnackBar(message);
+    }
+  }
+  
+  let closeSnackBar = () => {
+    if(oSnackBar.current){
+      oSnackBar.current.closeSnackBar();
+    }
+  }
   useEffect(() => {
     // this function checks if the user is logged in and store details of user object.
     async function Start() {
       const jwt = localStorage.getItem("token");
       if (jwt) {
-        const user_jwt = jwtDecode(jwt);
-        console.log(user_jwt);
-        const { data } = await http.get(server_url + `users/${user_jwt._id}`);
-        setUser(data);
+        http.get(api.BASE_URL  + api.CHECK_FOR_LOGGED_IN_USER ,{headers : {accesstoken : jwt}}).then(oUser=>{
+          if(oUser){
+            setUser(oUser.data);
+          }
+        }).catch(err=>{
+          console.log(err);
+        });
+      }else{
+        props.history.push('login')
       }
     }
     Start();
   }, []);
   return (
     <BrowserRouter basename="/">
-      <Navbar user={user} />
+      {user && user._id && <Navbar user={user} /> }
       <Switch>
         {/* All the routes are handled here */}
-        <Route path="/login" {...props} component={Auth} />
-        <Route path="/register" {...props} component={Register} />
-        <Route path="/activateUser" {...props} component={Activate} />
+        <Route path="/login" render={(props)=><Auth openSnackBar={openSnackBar} {...props}/> } />
+        <Route path="/register" render={(props)=><Register openSnackBar={openSnackBar} {...props}/> }  />
+        <Route path="/activateUser" render={(props)=> <Activate {...props} />} />
         <ProtectedRoute
           path="/product/:id"
           render={(props) => <Product {...props} user={user} />}
@@ -43,6 +65,7 @@ function App(props) {
         <Route path="/logout" exact component={Logout} />
         <Route path="/" exact component={Search} />
       </Switch>
+      <CustomSnackBar ref={oSnackBar} />
     </BrowserRouter>
   );
 }
