@@ -1,6 +1,6 @@
 import Item from '../models/item'
 import * as apiHelper from './apiHelper';
-import Q from 'q';
+import Q, { async } from 'q';
 export async function filterStringsToArrays(req, res) {
   await Item.find({}).then(async (oItems) => {
     await oItems.forEach((oItem) => {
@@ -64,4 +64,20 @@ export function viewAllCategoryItems(req,res){
   }catch(err){
     return res.status(400).send({error : err});
   }
+}
+
+
+export async function checkForItems(req, res) {
+  const words = req.body.words
+  let items = []
+  await Q.all(words.map((word) => {
+    Item.findOne({ $text: { $search: word } }, { score: { $meta: 'textScore' } })
+      .sort({ score: { $meta: 'textScore' } })
+      .then(oItem => {
+          items.push(oItem)
+      }).catch(error=>{
+        res.status(400).json({ message: error.message })
+      })
+  }))
+  return res.status(200).send(items);
 }
