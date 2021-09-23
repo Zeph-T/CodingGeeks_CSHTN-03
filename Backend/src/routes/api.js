@@ -23,6 +23,7 @@ module.exports = (router) => {
   router.get('/checkForLoggedInUser',apiHelper.checkForLoggedInUser);
   router.get('/items', itemApi.getItems);
   router.get('/itemsForHome',itemApi.getItemsForHome);
-  router.get('/category/:category', itemApi.viewAllCategoryItems);
+  router.get('/category/:category',itemApi.viewAllCategoryItems);
+  router.post('/getExtractedItems',itemApi.checkForItems);
   // router.get('/convertArray',itemApi.filterStringsToArrays);
 }
