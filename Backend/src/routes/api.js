@@ -25,5 +25,8 @@ module.exports = (router) => {
   router.get('/itemsForHome',itemApi.getItemsForHome);
   router.get('/category/:category',itemApi.viewAllCategoryItems);
   router.post('/getExtractedItems',itemApi.checkForItems);
-  // router.get('/convertArray',itemApi.filterStringsToArrays);
+  router.post('/addToCart',itemApi.addToCart);
+  router.post('/addToWishlist',itemApi.addToWishList);
+  router.get('/getCart',itemApi.getCartItems);
+  router.get('/getWishList',itemApi.getWishList);
 }
