@@ -7,13 +7,14 @@ import {
   Grid,
   Typography,
   Container,
-  Slide
+  Slide,
+  LinearProgress
 } from "@material-ui/core";
 import http from "../../services/httpService";
-
+import '../../App.css';
 const Home = () => {
   const [products, setProducts] = useState([]);
-
+  const [loading,setLoading] = useState(true);
   useEffect(() => {
     async function Start() {
       const jwt = localStorage.getItem("token");
@@ -23,11 +24,20 @@ const Home = () => {
       );
       console.log(data);
       setProducts(data);
+      setLoading(false);
     }
     Start();
   }, []);  
   const slice = (text, count = 20) => {
     return text.slice(0, count) + (text.length > count ? "..." : "");
+  }
+  if(loading === true){
+    return (
+      <div className="verticalCenterAligned">
+        <h2>GETTING THE ITEMS</h2>
+        <LinearProgress color="secondary" />
+      </div>
+    )
   }
   return (
     <div className="container-fluid">
