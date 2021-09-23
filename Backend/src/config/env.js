@@ -1,5 +1,5 @@
 // all env variables
-
+require('dotenv').config()
 
 export const envVariables = {
  db_string : process.env.MEDZONE_DB_CONN_STRING,
