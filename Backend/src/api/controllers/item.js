@@ -1,5 +1,6 @@
 import Item from '../models/item'
-
+import * as apiHelper from './apiHelper';
+import Q from 'q';
 export async function filterStringsToArrays(req, res) {
   await Item.find({}).then(async (oItems) => {
     await oItems.forEach((oItem) => {
@@ -21,10 +22,9 @@ export async function filterStringsToArrays(req, res) {
 
 export async function getItems(req, res) {
   let text = req.query.search
-  console.log(text)
-  const namePromise = Item.find({ name: text })
-  const categoryPromise = Item.find({ categories: text })
-  Promise.all([namePromise, categoryPromise]).then((data, error) => {
+  const namePromise = Item.find({name : { $regex : text , $options : 'i'}});
+  const categoryPromise = Item.find({categories : {$regex :text , $options  : 'i'}});
+  Q.all([namePromise, categoryPromise]).then((data, error) => {
     if (error) {
       res.status(400)
     } else {

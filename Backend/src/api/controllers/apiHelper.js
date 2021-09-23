@@ -4,6 +4,7 @@ import User from '../models/user';
 import nodemailer from 'nodemailer';
 import { envVariables } from '../../config/env';
 import jwt from 'jsonwebtoken';
+import Item from '../models/item';
 
 export const oEmailContextTexts = {
     activation : 'You’re almost there!<br>Thank you for signing up with us. Get started with MedZone today! Verify your account clicking on the link below.<br><br><br>'
