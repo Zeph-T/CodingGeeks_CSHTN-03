@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background-color: rgb(223, 253, 253);
 }
 
 .App-logo {
@@ -43,4 +44,13 @@
   top : 50%;
   left : 50%;
   transform: translate(-50%,-50%);
+}
+
+.product_div {
+  background: transparent;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin: auto;
+  padding: 1.5em;
 }

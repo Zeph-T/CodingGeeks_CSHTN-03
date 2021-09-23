@@ -11,6 +11,7 @@ import Navbar from "./components/Navbar/navbar";
 import ProtectedRoute from "./components/Product/Product";
 import Product from "./components/Product/Product";
 import "./App.css";
+import Search from "./components/Search/Search";
 
 function App(props) {
   const [user, setUser] = useState(); // to save user details.
@@ -40,6 +41,7 @@ function App(props) {
           render={(props) => <Product {...props} user={user} />}
         />
         <Route path="/logout" exact component={Logout} />
+        <Route path="/" exact component={Search} />
       </Switch>
     </BrowserRouter>
   );

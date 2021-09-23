@@ -5,6 +5,7 @@ import { Route, BrowserRouter as Router } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import "font-awesome/css/font-awesome.min.css";
+import "bootstrap/dist/css/bootstrap.css";
 
 const theme = createMuiTheme({
   props: {
