@@ -34,6 +34,13 @@ export async function getItems(req, res) {
   })
 }
 
+// export function getItemsForHome(req,res){
+//   let categories = ["EyeCare" , "" , " ", " ", ""];
+//   categories.forEach(items=>{
+//     Item.find
+//   });
+// }
+
 /*
     let text = req.query.search;
     categoryPromise = function()
