@@ -15,5 +15,7 @@ export const api = {
     GET_CART : '/api/getCart',
     GET_WISHLIST : '/api/getWishList',
     RESET_PASSWORD : '/auth/resetPassword',
-    VALIDATE_RESET_PASSWORD_TOKEN : '/auth/verifyPasswordToken'
+    VALIDATE_RESET_PASSWORD_TOKEN : '/auth/verifyPasswordToken',
+    FORGOT_PASSWORD : '/auth/forgotPassword',
+    REMOVE_ITEM_FROM_CART : '/api/removeItemFromCart/'
 }
