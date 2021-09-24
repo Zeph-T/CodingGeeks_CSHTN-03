@@ -50,9 +50,6 @@ function Header(props) {
 
 
   useEffect(() => {
-    //  
-    //  if (Object.keys(query).length !== 0 && a === false) setSearch(query.search);
-    //   a = true;
     async function Start() {
       const { data } = await http.get(api.BASE_URL + api.GET_CART, {
         headers: { accesstoken: jwt },

@@ -2,9 +2,16 @@ import React, { useEffect, useState } from "react";
 import { api } from "../../utilities";
 import { Paper, Container, LinearProgress } from "@material-ui/core";
 import WrappedButton from "../common/WrappedButton";
-import { Link } from "react-router-dom";
 import http from "../../services/httpService";
-import "../../App.css";
+import logo1 from "../../static/1.jpeg";
+import logo2 from "../../static/2.jpeg";
+import logo3 from "../../static/3.jpeg";
+import logo4 from "../../static/4.jpeg";
+import logo5 from "../../static/5.jpeg";
+import logo6 from "../../static/6.jpeg";
+import logo7 from "../../static/7.jpeg";
+import logo8 from "../../static/8.jpeg";
+let logoarray = [logo1, logo2, logo3, logo4, logo5, logo6, logo7, logo8];
 const Home = (props) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -39,6 +46,10 @@ const Home = (props) => {
       </div>
     );
   }
+  const random = () => {
+    const number = Math.floor(Math.random() * 8);
+    return logoarray[number];
+  };
   return (
     <div className="container-fluid">
       {products.map((product) => (
@@ -54,7 +65,7 @@ const Home = (props) => {
                     variant="contained"
                     color="primary"
                     name="View All"
-                    style={{marginTop: "1.4rem", marginRight: "1rem" }}
+                    style={{ marginTop: "1.4rem", marginRight: "1rem" }}
                   />
                 </a>
               </div>
@@ -66,7 +77,9 @@ const Home = (props) => {
                     <img
                       className="prod-img-home"
                       alt="medicine"
-                      src="https://source.unsplash.com/200x200/?medicine"
+                      src={random()}
+                      height="200px"
+                      width="200px"
                     />
                     <a className="price-home" href={"/product/" + item._id}>
                       {item.name}

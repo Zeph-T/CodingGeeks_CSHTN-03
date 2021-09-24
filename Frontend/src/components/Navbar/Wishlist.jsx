@@ -4,7 +4,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContentText from "@mui/material/DialogContentText";
-import http from "../../services/httpService";
 import { api } from "../../utilities";
 import Item from "./wishitem";
 import Button from "@mui/material/Button";

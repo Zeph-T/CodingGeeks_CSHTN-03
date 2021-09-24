@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Autocomplete, Grid, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { api } from "../../utilities";
 import http from "../../services/httpService";
 import { ReactComponent as NoData } from "../../static/nodata.svg";
-
-
 import { LinearProgress } from "@material-ui/core";
-import { red } from "@mui/material/colors";
-
+import logo1 from "../../static/1.jpeg";
+import logo2 from "../../static/2.jpeg";
+import logo3 from "../../static/3.jpeg";
+import logo4 from "../../static/4.jpeg";
+import logo5 from "../../static/5.jpeg";
+import logo6 from "../../static/6.jpeg";
+import logo7 from "../../static/7.jpeg";
+import logo8 from "../../static/8.jpeg";
+let logoarray = [logo1, logo2, logo3, logo4, logo5, logo6, logo7, logo8];
 function Search({ searchItem, match }) {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
