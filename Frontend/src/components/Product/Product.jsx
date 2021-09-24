@@ -44,8 +44,11 @@ const Product = (props) => {
   const classes = useStyles();
   const [qty, setQty] = useState(1);
   const addToCartHandler = () => {
-    props.history.push(`/cart`);
+    
   };
+   const addToWishListHandler = () => {
+     
+   };
   const handleSubmit = () => {};
   if (loading === true) {
     return (
@@ -75,7 +78,7 @@ const Product = (props) => {
               <p className="product-manuf">By {product.manufacturer}</p>
               <hr />
               <p>
-                Price: <span className="price">&#x20b9;  {product.price}</span>
+                Price: <span className="price">&#x20b9; {product.price}</span>
               </p>
               Category:{" "}
               <span className="prod-category"> {product.category}</span>
@@ -112,6 +115,14 @@ const Product = (props) => {
                   onClick={addToCartHandler}
                 >
                   Add to Cart
+                  <i class="fa fa-shopping-cart fa-lg" aria-hidden="true"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-primary asdf"
+                  onClick={addToWishListHandler}
+                >
+                  Add to Wishlist
                   <i class="fa fa-shopping-cart fa-lg" aria-hidden="true"></i>
                 </button>
               </form>

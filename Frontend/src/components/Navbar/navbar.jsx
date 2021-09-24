@@ -38,19 +38,33 @@ function Header() {
               <div className="link">
                 <i class="fa fa-user-circle-o fa-lg" aria-hidden="true"></i>
               </div>
-              <a className="link" href="/me">Profile</a>
+              <a className="link" href="/me">
+                Profile
+              </a>
             </div>
             <div>
               <div className="link">
                 <i class="fa fa-shopping-cart fa-lg" aria-hidden="true"></i>
               </div>
-              <a className="link" href="/cart">Cart</a>
+              <a className="link" href="/cart">
+                Cart
+              </a>
+            </div>
+            <div>
+              <div className="link">
+                <i class="fa fa-bookmark fa-lg" aria-hidden="true"></i>
+              </div>
+              <a className="link" href="/wishlist">
+                Wishlist
+              </a>
             </div>
             <div>
               <div className="link">
                 <i class="fa fa-sign-out fa-lg" aria-hidden="true"></i>
               </div>
-              <a className="link" href="/logout">Sign Out</a>
+              <a className="link" href="/logout">
+                Sign Out
+              </a>
             </div>
           </div>
         </div>
