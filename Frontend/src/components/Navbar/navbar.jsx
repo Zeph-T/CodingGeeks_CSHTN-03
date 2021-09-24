@@ -3,9 +3,16 @@ import PictureLink from "./styled/PictureLink";
 import "./Header.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import logo from "../../static/logo.png";
-import React from "react";
+import React, {useState} from "react";
 
 function Header() {
+  const [search, setSearch] = useState("");
+  const handleKeyPress = (event) => {
+      if (event.key === "Enter") {
+        if (!search.length) window.location = '/';
+        else window.location = `?search=${search}`
+      }
+  };
   return (
     <div className="header_wraper">
       <HeaderStyled>
@@ -22,6 +29,9 @@ function Header() {
             type="text"
             className="search-bar"
             placeholder="Search for medicines, brands and more"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyPress={handleKeyPress}
           />
           <div className="profile-links">
             <div>

@@ -7,5 +7,6 @@ export const api = {
     ACTIVATE_USER  : '/auth/activateUser/',
     GET_ITEMS_FOR_HOME_PAGE : '/api/itemsForHome',
     GET_CATEGORY_ITEMS : "/api/category/",
-    GET_SEARCH_ITEMS : '/api/items?'
+    GET_SEARCH_ITEMS : '/api/items?',
+    GET_PRODUCT : '/api/product/'
 }

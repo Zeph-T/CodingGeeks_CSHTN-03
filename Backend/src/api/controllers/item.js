@@ -30,12 +30,18 @@ export async function getItems(req, res) {
     if (error) {
       res.status(400)
     } else {
-      console.log(data)
       res.status(200).json({ byText: data[0], byCategory: data[1] })
     }
   })
 }
-
+export async function getProduct(req, res) {
+  try {
+    const product = await Item.findById(req.params.id);
+    if (product) res.send(product);
+  } catch (ex) {
+    res.status(400).send({error: err});
+  }
+}
 export async function getItemsForHome(req, res) {
   try{
     let categories = ['EyeCare', 'HealthFood', 'SkinCare', 'Ayurveda', 'ProteinSupplements']

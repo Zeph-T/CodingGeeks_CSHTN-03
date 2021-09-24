@@ -29,4 +29,5 @@ module.exports = (router) => {
   router.post('/addToWishlist',itemApi.addToWishList);
   router.get('/getCart',itemApi.getCartItems);
   router.get('/getWishList',itemApi.getWishList);
+  router.get('/product/:id', itemApi.getProduct);
 }

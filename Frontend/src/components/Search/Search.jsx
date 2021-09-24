@@ -1,49 +1,37 @@
-import React from "react";
-import { Grid , Typography} from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Grid, Typography } from "@mui/material";
+import { api } from "../../utilities";
+import http from "../../services/httpService";
+import { LinearProgress } from "@material-ui/core";
 
-function Search() {
-  const results = [
-    {
-      _id: "12142",
-      name: "1Mile N95 Travel Safety Kit",
-      type: "Packet of 1 Kit",
-      category: "Covid Test & Prevention",
-      price: "₹469",
-      manufacturer: "1Mile HealthCare",
-      categories: ["Covid Test & Prevention"],
-      quantity: 4,
-    },
-    {
-      _id: "12147",
-      name: "1Mile N95 Travel Safety Kit",
-      type: "Packet of 1 Kit",
-      category: "Covid Test & Prevention",
-      price: "₹469",
-      manufacturer: "1Mile HealthCare",
-      categories: ["Covid Test & Prevention"],
-      quantity: 4,
-    },
-    {
-      _id: "12147",
-      name: "1Mile N95 Travel Safety Kit",
-      type: "Packet of 1 Kit",
-      category: "Covid Test & Prevention",
-      price: "₹469",
-      manufacturer: "1Mile HealthCare",
-      categories: ["Covid Test & Prevention"],
-      quantity: 4,
-    },
-    {
-      _id: "12147",
-      name: "1dfajiop Kit",
-      type: "Packet of 1 Kit",
-      category: "Covid Test & Prevention",
-      price: "₹469",
-      manufacturer: "1Mile HealthCare",
-      categories: ["Covid Test & Prevention"],
-      quantity: 4,
-    },
-  ];
+
+function Search({ searchItem, match }) {
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    async function Start() {
+      console.log(searchItem);
+      const jwt = localStorage.getItem("token");
+      console.log(api.BASE_URL + api.GET_SEARCH_ITEMS + "search=" + searchItem);
+      const { data } = await http.get(
+        api.BASE_URL + api.GET_SEARCH_ITEMS + "search=" + searchItem,
+        {
+          headers: { accesstoken: jwt },
+        }
+      );
+      setResults(data.byCategory);
+      setLoading(false);
+    }
+    Start();
+  }, []);
+  if (loading === true) {
+    return (
+      <div className="verticalCenterAligned">
+        <h2>Loading Search Results</h2>
+        <LinearProgress color="secondary" />
+      </div>
+    );
+  }
   return (
     <div className="container mt-5">
       {results.map((product) => (
@@ -64,7 +52,7 @@ function Search() {
                 <p className="product-manuf">By {product.manufacturer}</p>
                 <hr />
                 <p>
-                  Price: <span className="price">{product.price}</span>
+                  Price: <span className="price">&#x20b9; {product.cost}</span>
                 </p>
                 Category:{" "}
                 <span className="prod-category"> {product.category}</span>

@@ -1,19 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { api } from "../../utilities";
-<<<<<<< HEAD
-import { Paper, Container } from "@material-ui/core";
-=======
 import {
-  Avatar,
-  Button,
   Paper,
-  Grid,
-  Typography,
   Container,
-  Slide,
   LinearProgress
 } from "@material-ui/core";
->>>>>>> 44cb6811ca504d53e4026bf6191a5ef179b6f362
 import http from "../../services/httpService";
 import '../../App.css';
 const Home = () => {
@@ -26,7 +17,6 @@ const Home = () => {
         api.BASE_URL + api.GET_ITEMS_FOR_HOME_PAGE,
         { headers: { accesstoken: jwt } }
       );
-      console.log(data);
       setProducts(data);
       setLoading(false);
     }
@@ -35,7 +25,6 @@ const Home = () => {
   const slice = (text, count = 20) => {
     return text.slice(0, count) + (text.length > count ? "..." : "");
   };
-  }
   if(loading === true){
     return (
       <div className="verticalCenterAligned">
@@ -62,14 +51,14 @@ const Home = () => {
                     />
                     <a
                       className="price-home"
-                      href={api.BASE_URL + "/product/" + item._id}
+                      href={"/product/" + item._id}
                     >
                       {item.name}
                     </a>
                     <p className="product-manuf">By {item.manufacturer}</p>
                     <hr />
                     <p>
-                      Price: <span className="price">{item.price}</span>
+                      Price: <span className="price">&#x20b9; {item.cost}</span>
                     </p>
                   </div>
                 ))}
