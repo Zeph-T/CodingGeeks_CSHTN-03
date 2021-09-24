@@ -12,6 +12,8 @@ import logo6 from "../../static/6.jpeg";
 import logo7 from "../../static/7.jpeg";
 import logo8 from "../../static/8.jpeg";
 import Slider from "react-slick";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 
 
 let logoarray = [logo1, logo2, logo3, logo4, logo5, logo6, logo7, logo8];
@@ -22,8 +24,35 @@ const Home = (props) => {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 5
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    initialSlide: 0,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: true
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }
+    ]
   };
 
   const [products, setProducts] = useState([]);
@@ -86,29 +115,31 @@ const Home = (props) => {
               </div>
 
               <hr />
-              <div className="row d-flex justify-content-between">
-              
+              <div className="row d-flex justify-content-between" style={{padding:'0rem 4rem'}}>
+                <Slider {...settings}>
                 {product.items.map((item) => (
                  
-                   <div className="col p-2 m-4 prod-info-home">
-                    <img
-                      className="prod-img-home"
-                      alt="medicine"
-                      src={random()}
-                      height="200px"
-                      width="200px"
-                    />
-                    <a className="price-home" href={"/product/" + item._id}>
-                      {item.name}
-                    </a>
-                    <p className="product-manuf">By {item.manufacturer}</p>
-                    <hr />
-                    <p>
-                      Price: <span className="price">&#x20b9; {item.cost}</span>
-                    </p>
-                  </div>
-                 
-                ))}
+                 <div className="col p-2 m-4 prod-info-home" style={{margin:'0rem 2rem'}}>
+                  <img
+                    className="prod-img-home"
+                    alt="medicine"
+                    src={random()}
+                    height='250px'
+                    maxwidth="40px"
+                  />
+                  <a className="price-home" href={"/product/" + item._id}>
+                    {item.name}
+                  </a>
+                  <p className="product-manuf">By {item.manufacturer}</p>
+                  <hr />
+                  <p>
+                    Price: <span className="price">&#x20b9; {item.cost}</span>
+                  </p>
+                </div>
+               
+              ))}
+                  </Slider>
+               
                 </div>
                 
               {/* </div> */}
