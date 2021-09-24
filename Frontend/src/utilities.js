@@ -17,7 +17,10 @@ export const api = {
   RESET_PASSWORD: '/auth/resetPassword',
   VALIDATE_RESET_PASSWORD_TOKEN: '/auth/verifyPasswordToken',
   FORGOT_PASSWORD: '/auth/forgotPassword',
-  REMOVE_ITEM_FROM_CART: '/api/removeItemFromCart/',
+  REMOVE_ITEM_FROM_CART: '/api/removeItemsFromCart',
   MAKE_PAYMENT: '/api/payment',
-  GET_PAST_ORDERS : '/api/getPastOrders'
+  GET_PAST_ORDERS : '/api/getPastOrders',
+  REMOVE_ITEM_FROM_WISHLIST : '/api/removeItemFromWishlist',
+  ML_MODEL_API_HEROKU : "https://medzone-ml.herokuapp.com/getText",
+  ML_MODEL_API_LOCALHOST: 'http://localhost:5000/getText'
 }

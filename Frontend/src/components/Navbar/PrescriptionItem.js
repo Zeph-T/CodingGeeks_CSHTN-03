@@ -13,7 +13,6 @@ const PrescriptionItem = (props) => {
     const [loading, setLoading] = useState(true);
     const [quantity, setQuantity] = useState(1);
     const jwt = localStorage.getItem("token");
-
     const addToWishListHandler = () => {
         setCartProgress(true);
         http.post(api.BASE_URL + api.ADD_TO_WISHLIST, { itemId: props.product._id }, { headers: { accesstoken: jwt } }).then(response => {

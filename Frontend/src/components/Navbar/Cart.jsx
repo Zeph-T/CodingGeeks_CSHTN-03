@@ -19,6 +19,8 @@ const Cart = ({
   onClick,
   onClickCheckout,
   setAmount,
+  setCart,
+  openSnackBar
 }) => {
   const showCheckout = cart.length > 0 ? 'block' : 'hidden';
   const jwt = localStorage.getItem('token')
@@ -31,11 +33,19 @@ const Cart = ({
     return total
   }
   const handleRemove = async (id) => {
-    const { data } = await http.put(
-      api.BASE_URL + api.REMOVE_ITEM_FROM_CART + `/${id}`,
-      { headers: { accesstoken: jwt } }
-    )
-    console.log(data)
+    http.get(
+      api.BASE_URL + api.REMOVE_ITEM_FROM_CART  + `/${id}`,
+    { headers: { accesstoken: jwt } }
+    ).then(response=>{
+      if(response){
+        console.log(response.data);
+        setCart(response.data.items);
+        openSnackBar('removed Item from cart')
+      }
+    }).catch(err=>{
+      console.log(err);
+
+    })
   }
   return (
     <Dialog

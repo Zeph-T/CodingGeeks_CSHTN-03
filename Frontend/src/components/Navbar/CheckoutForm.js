@@ -1,17 +1,19 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js'
 import { api } from '../../utilities'
 
 import CardSection from './CardSection'
 import '../../App.css'
 import httpService from '../../services/httpService'
+import WrappedButton from '../common/WrappedButton'
+
 const jwt = localStorage.getItem('token');
 export default function CheckoutForm({ amount , ...props}) {
-
+  const [progress , setProgress] = useState(false);
   const stripe = useStripe()
-  const elements = useElements()
-
+  const elements = useElements() 
   const handleSubmit = async (event) => {
+    setProgress(true);
     // We don't want to let default form submission happen here,
     // which would refresh the page.
     event.preventDefault()
@@ -31,6 +33,8 @@ export default function CheckoutForm({ amount , ...props}) {
         )
         .then((response) => {
           if (response.data.success) {
+            setProgress(false);
+            props.setPaymentOpen(false);
             props.openSnackBar('Payment Successful')
           } else {
             props.openSnackBar('Error making payment')
@@ -58,9 +62,7 @@ export default function CheckoutForm({ amount , ...props}) {
   return (
     <form onSubmit={handleSubmit}>
       <CardSection />
-      <button className='pay-button' disabled={!stripe}>
-        Confirm order
-      </button>
+      <WrappedButton className='pay-button' onClick={handleSubmit} disabled={!stripe || progress} color="primary" name='paynow' variant="outlined" style={{marginTop : '1rem',width : '100%'}}/> 
     </form>
   )
 }

@@ -30,7 +30,8 @@ module.exports = (router) => {
   router.get('/getCart',itemApi.getCartItems);
   router.get('/getWishList',itemApi.getWishList);
   router.get('/product/:id', itemApi.getProduct);
-  router.put('/removeItemsFromCart/:id',itemApi.removeItemFromCart);
+  router.get('/removeItemsFromCart/:id',itemApi.removeItemFromCart);
   router.post('/payment',userApi.Payment);
   router.get('/getPastOrders',itemApi.getPastOrders);
+  router.get('/removeItemFromWishlist/:id',itemApi.removeItemFromWishlist);
 }

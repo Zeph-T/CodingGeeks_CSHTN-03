@@ -39,7 +39,7 @@ function Header(props) {
   const [imageName, setImageName] = useState("");
   const [imageType, setImageType] = useState("");
   const query = queryString.parse(window.location.search);
-    const [search, setSearch] = useState(query.search);
+  const [search, setSearch] = useState(query.search);
   const jwt = localStorage.getItem("token");
   const [cartOpen, setCartOpen] = useState(false)
   const [wishOpen, setwishOpen] = useState(false)
@@ -48,7 +48,7 @@ function Header(props) {
   //var a = false;
   const [prescription, setPrescription] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [acitivtyText, setActivityText] = useState("");
 
   useEffect(() => {
     async function Start() {
@@ -66,8 +66,9 @@ function Header(props) {
     }
     Start();
     if (url) {
+      setActivityText("Extracting Medicines from the Prescription")
       httpService
-        .post("https://medzone-ml.herokuapp.com/getText", {
+        .post(api.ML_MODEL_API_LOCALHOST, {
           image_url: url,
         })
         .then((response) => {
@@ -81,6 +82,7 @@ function Header(props) {
           } else {
             console.log(response);
             setUrl(null);
+            setActivityText("Getting Medicines from the Database");
             httpService.post(api.BASE_URL + api.GET_EXTRACTED_ITEMS, {
               words: response.data.result,
             },{headers: { accesstoken: jwt }}
@@ -94,9 +96,10 @@ function Header(props) {
               }
               else {
                 console.log(response);
-                setPrescription(response);
+                setPrescription(response.data);
                 setLoading(false);
               }
+              setActivityText("");
             })
           }
         })
@@ -126,6 +129,7 @@ function Header(props) {
   const handleCancelDialog = (event) => {
     handleClose();
     setImage("");
+    setPrescription([]);
   };
 
   const postDetails = () => {
@@ -255,7 +259,11 @@ function Header(props) {
           </label>
           <div>
             {image && <Typography variant="body1"> {imageName} </Typography>}
+            <div style={{display : 'flex',flexDirection : 'column',alignItems : 'center' , justifyContent : 'center'}}>
             {loading && <CircularProgress />}
+            <br />
+            {loading && <Typography variant="body1"> {acitivtyText} </Typography>}
+            </div>
           </div>
           {/* {console.log(imageName)} */}
           {prescription.length>0 && <PrescriptionResult results={prescription} {...props} />}
@@ -272,7 +280,7 @@ function Header(props) {
         <DialogContent>
           <div>
             <Elements stripe={stripePromise}>
-              <CheckoutForm amount={amount} cart={cart} openSnackBar={props.openSnackBar} />
+              <CheckoutForm setPaymentOpen={setPaymentOpen} openSnackBar={props.openSnackBar} amount={amount} cart={cart} openSnackBar={props.openSnackBar} />
             </Elements>
           </div>
         </DialogContent>
@@ -283,11 +291,14 @@ function Header(props) {
         onClickCheckout={onClickCheckout}
         setCartOpen={setCartOpen}
         setAmount={setAmount}
+        setCart={setCart}
       />
       <Wishlist
         wishlist={wishlist}
         wishOpen={wishOpen}
         setwishOpen={setwishOpen}
+        setWishlist={setWishlist}
+        openSnackBar={props.openSnackBar}
       />
       <Dialog
         open={Logopen}

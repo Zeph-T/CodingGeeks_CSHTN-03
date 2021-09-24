@@ -275,6 +275,7 @@ export function Payment(req, res) {
           transactionId : charge.id,
           items : cartItems
         })
+        user.cart = [];
         user.save(async (err) => {
           if (err) {
             console.log(err)
@@ -293,7 +294,7 @@ export function Payment(req, res) {
               })
             )
             console.log('Transaction Successfull')
-            res.status(200).json({ message: 'successful' })
+            res.status(200).json({ message: 'successful' ,success: true})
           }
         })
       } catch (err) {

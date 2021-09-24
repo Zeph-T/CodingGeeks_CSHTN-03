@@ -91,6 +91,7 @@ export function viewAllCategoryItems(req, res) {
 export async function checkForItems(req, res) {
   const words = req.body.words
   let items = []
+  let freq = {};
   await Q.all(
     words.map(async (word) => {
       try{
@@ -98,8 +99,10 @@ export async function checkForItems(req, res) {
           { $text: { $search: word } },
           { score: { $meta: 'textScore' } }
         ).sort({ score: { $meta: 'textScore' } })
-        if(oItem!== null)
-              items.push(oItem)
+        if(oItem!== null && freq[oItem._id.toString()] === undefined){
+          items.push(oItem)
+          freq[oItem._id.toString()] = 1
+        }
       }catch(error){
           res.status(400).json({ message: error.message })
         }
@@ -245,12 +248,13 @@ export function removeItemFromCart(req, res) {
     if (req.user) {
       User.findOneAndUpdate(
         { _id: req.user._id },
-        { $pull: { cart: { _id: mongoose.Types.ObjectId(req.params.id) } } },
-        (err, docs) => {
+        { $pull: { cart: { item: mongoose.Types.ObjectId(req.params.id) } } },{new:true},
+        async (err, user) => {
           if (err) {
             return res.status(300).send({ error: err })
           } else {
-            return res.status(200).send({ status: 'removed Item from Cart' })
+            await user.populate('cart.item')
+            return res.status(200).send({ items : user.cart })
           }
         }
       )
@@ -262,7 +266,28 @@ export function removeItemFromCart(req, res) {
   }
 }
 
-
+export function removeItemFromWishlist(req, res) {
+  try {
+    if (req.user) {
+      User.findOneAndUpdate(
+        { _id: req.user._id },
+        { $pull: { wishlist: mongoose.Types.ObjectId(req.params.id) } },{new:true},
+        async (err, user) => {
+          if (err) {
+            return res.status(300).send({ error: err })
+          } else {
+            await user.populate('wishlist')
+            return res.status(200).send({ items : user.wishlist })
+          }
+        }
+      )
+    } else {
+      throw 'No user found'
+    }
+  } catch (err) {
+    return res.status(400).send({ error: err })
+  }
+}
 
 export function getPastOrders(req,res){
   try{
