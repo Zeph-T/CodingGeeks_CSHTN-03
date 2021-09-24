@@ -2,31 +2,50 @@ import React, { useState, useEffect } from "react";
 import HeaderStyled from "./styled/HeaderStyle";
 import PictureLink from "./styled/PictureLink";
 import "./Header.css";
+import { api } from "../../utilities";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUpload } from '@fortawesome/free-solid-svg-icons'
+import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import logo from "../../static/logo.png";
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import http from "../../services/httpService";
+import DialogTitle from "@mui/material/DialogTitle";
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { Typography } from "@material-ui/core";
-
-
+import Cart from "./Cart";
 
 function Header(props) {
   const [open, setOpen] = useState(false);
-  const [image, setImage] = useState("")
-  const [url, setUrl] = useState("")
+  const [cart, setCart] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
+  const [image, setImage] = useState("");
+  const [url, setUrl] = useState("");
   const [imageName, setImageName] = useState("");
   const [imageType, setImageType] = useState("");
   const [search, setSearch] = useState("");
-
+  const [cartOpen, setCartOpen] = useState(false);
+  const [wishOpen, setwishOpen] = useState(false);
+  const jwt = localStorage.getItem("token");
   useEffect(() => {
+    async function Start() {
+      const { data } = await http.get(api.BASE_URL + api.GET_CART, {
+        headers: { accesstoken: jwt },
+      });
+      setCart(data);
+      const { data: wishlist_item } = await http.get(
+        api.BASE_URL + api.GET_WISHLIST,
+        {
+          headers: { accesstoken: jwt },
+        }
+      );
+      setWishlist(wishlist_item);
+    }
+    Start();
     if (url) {
       fetch("https://medzone-ml.herokuapp.com/getText", {
         method: "post",
@@ -35,93 +54,90 @@ function Header(props) {
         },
         body: JSON.stringify({
           image_url: url,
-        })
-      }).then(res => res.json())
-        .then(data => {
-          console.log(data)
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
           if (data.error) {
-            props.openSnackBar("Error ocurred while analyzing the prescription")
-          }
-          else {
+            props.openSnackBar(
+              "Error ocurred while analyzing the prescription"
+            );
+          } else {
             // fetch a backend route...jiska muje pata nahi hai
           }
-        }).catch(err => {
-          console.log(err)
-          props.openSnackBar("Error ocurred!")
         })
-
+        .catch((err) => {
+          console.log(err);
+          props.openSnackBar("Error ocurred!");
+        });
     }
-  }, [url])
+  }, [url]);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+  const handleClickOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const imageStateUpdate = (event) => {
-    console.log(event)
-    setImage(event.target.files[0])
+    console.log(event);
+    setImage(event.target.files[0]);
     if (event.target.files) {
-      setImageName(event.target.files[0].name)
-      setImageType(event.target.files[0].type)
+      setImageName(event.target.files[0].name);
+      setImageType(event.target.files[0].type);
     }
-
-  }
+  };
 
   const handleCancelDialog = (event) => {
     handleClose();
-    setImage('');
-  }
-
+    setImage("");
+  };
 
   const postDetails = () => {
-    if (imageType.includes('image')) {
-      const data = new FormData()
-      data.append("file", image)
-      data.append("upload_preset", "Instafam")
-      data.append("cloud_name", "abcd1234huy")
+    if (imageType.includes("image")) {
+      const data = new FormData();
+      data.append("file", image);
+      data.append("upload_preset", "Instafam");
+      data.append("cloud_name", "abcd1234huy");
       fetch("https://api.cloudinary.com/v1_1/abcd1234huy/image/upload", {
         method: "post",
-        body: data
+        body: data,
       })
-        .then(res => res.json())
-        .then(data => {
-          setUrl(data.url)
+        .then((res) => res.json())
+        .then((data) => {
+          setUrl(data.url);
           setOpen(false);
           console.log(url);
         })
-        .catch(err => {
-          console.log(err)
-        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      props.openSnackBar("The Upload type should be an image!");
     }
-    else {
-      props.openSnackBar("The Upload type should be an image!")
-    }
-
-
-  }
-
+  };
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
-      if (!search.length) window.location = '/';
-      else window.location = `/?search=${search}`
+      if (!search.length) window.location = "/";
+      else window.location = `/?search=${search}`;
     }
   };
   return (
     <div>
       <div className="header_wraper">
         <HeaderStyled>
-          <div className="left-items" style={{ padding: '2px 5px' }}>
+          <div className="left-items" style={{ padding: "2px 5px" }}>
             <img src={logo} className="brand_logo" width="80px" height="80px" />
-            <Button color='inherit' variant="outlined" onClick={handleClickOpen}>
-              <FontAwesomeIcon style={{ fontSize: '1.7rem' }} icon={faUpload} size="lg" />
+            <Button
+              color="inherit"
+              variant="outlined"
+              onClick={handleClickOpen}
+            >
+              <FontAwesomeIcon
+                style={{ fontSize: "1.7rem" }}
+                icon={faUpload}
+                size="lg"
+              />
               Upload Prescription
             </Button>
-
           </div>
           <div className="right-items">
             <input
@@ -145,15 +161,15 @@ function Header(props) {
                 <div className="link">
                   <i class="fa fa-shopping-cart fa-lg" aria-hidden="true"></i>
                 </div>
-                <a className="link" href="/cart">
+                <Button className="link" onClick={() => setCartOpen(!cartOpen)}>
                   Cart
-                </a>
+                </Button>
               </div>
               <div>
                 <div className="link">
                   <i class="fa fa-bookmark fa-lg" aria-hidden="true"></i>
                 </div>
-                <a className="link" href="/wishlist">
+                <a className="link" onClick={() => setwishOpen(!wishOpen)}>
                   Wishlist
                 </a>
               </div>
@@ -173,9 +189,11 @@ function Header(props) {
         <DialogTitle>Upload Prescription</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            You can upload any prescription in image format, we will fetch the required medications mentioned in your prescription and get them added to your cart!
+            You can upload any prescription in image format, we will fetch the
+            required medications mentioned in your prescription and get them
+            added to your cart!
           </DialogContentText>
-          <label htmlFor="upload-photo" style={{ margin: '0.5rem 12rem' }}>
+          <label htmlFor="upload-photo" style={{ margin: "0.5rem 12rem" }}>
             <input
               style={{ display: "none" }}
               id="upload-photo"
@@ -190,11 +208,15 @@ function Header(props) {
               aria-label="add"
               variant="extended"
             >
-              <AddIcon style={{ margin: '4px' }} /> <Typography style={{ fontWeight: '600' }} variant='caption'>Add a prescription </Typography>
+              <AddIcon style={{ margin: "4px" }} />{" "}
+              <Typography style={{ fontWeight: "600" }} variant="caption">
+                Add a prescription{" "}
+              </Typography>
             </Fab>
-
           </label>
-          <div>{image && <Typography variant='body1'> {imageName} </Typography>}</div>
+          <div>
+            {image && <Typography variant="body1"> {imageName} </Typography>}
+          </div>
           {console.log(imageName)}
         </DialogContent>
         <DialogActions>
@@ -202,6 +224,7 @@ function Header(props) {
           <Button onClick={() => postDetails()}>Upload!</Button>
         </DialogActions>
       </Dialog>
+      <Cart cart={cart} cartOpen={cartOpen} setCartOpen={setCartOpen} />
     </div>
   );
 }
