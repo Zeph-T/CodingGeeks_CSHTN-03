@@ -16,6 +16,10 @@ let logoarray = [logo1, logo2, logo3, logo4, logo5, logo6, logo7, logo8];
 function Search({ searchItem, match }) {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
+   const random = () => {
+     const number = Math.floor(Math.random() * 8);
+     return logoarray[number];
+   };
   useEffect(() => {
     async function Start() {
       console.log(searchItem);
@@ -61,8 +65,10 @@ function Search({ searchItem, match }) {
             <Grid item md={4} justify="center">
               <img
                 className="prod-img"
-                alt="Example Alt"
-                src="https://source.unsplash.com/200x200/?medicine"
+                alt="medicine"
+                src={random()}
+                height="220px"
+                width="220px"
               />
             </Grid>
             <Grid item md={8}>

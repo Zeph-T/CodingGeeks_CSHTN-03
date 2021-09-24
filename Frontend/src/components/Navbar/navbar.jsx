@@ -102,7 +102,7 @@ function Header(props) {
           setUrl(null);
         });
     }
-  }, [cart, url]);
+  }, [ url]);
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const imageStateUpdate = (event) => {

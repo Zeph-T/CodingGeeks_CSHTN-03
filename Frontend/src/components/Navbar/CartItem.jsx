@@ -4,6 +4,7 @@ import { Grid } from "@mui/material";
 import WrappedButton from "../common/WrappedButton";
 import logo1 from "../../static/1.jpeg";
 import logo2 from "../../static/2.jpeg";
+
 import logo3 from "../../static/3.jpeg";
 import logo4 from "../../static/4.jpeg";
 import logo5 from "../../static/5.jpeg";
@@ -13,6 +14,10 @@ import logo8 from "../../static/8.jpeg";
 let logoarray = [logo1, logo2, logo3, logo4, logo5, logo6, logo7, logo8];
 const cartItem = ({ cart_item, handleRemove }) => {
   const { qty, item: product } = cart_item;
+   const random = () => {
+     const number = Math.floor(Math.random() * 8);
+     return logoarray[number];
+   };
   return (
     <div className="header_wraper" key={product._id}>
       <Grid container>
@@ -20,7 +25,9 @@ const cartItem = ({ cart_item, handleRemove }) => {
           <img
             className="prod-img"
             alt="Example Alt"
-            src="https://source.unsplash.com/150x150/?medicine"
+            src={random()}
+            height="220px"
+            width="220px"
           />
         </Grid>
         <Grid item md={8}>
