@@ -35,7 +35,7 @@ function Search({ searchItem, match }) {
     );
   } else if (results.length == 0) {
     return (
-
+      <div></div>
     );
   }
   return (

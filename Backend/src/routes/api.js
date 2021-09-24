@@ -30,5 +30,6 @@ module.exports = (router) => {
   router.get('/getCart',itemApi.getCartItems);
   router.get('/getWishList',itemApi.getWishList);
   router.get('/product/:id', itemApi.getProduct);
-  router.get('/removeItemsFromCart/:id',itemApi.removeItemFromCart);
+  router.put('/removeItemsFromCart/:id',itemApi.removeItemFromCart);
+  router.post('/payment',userApi.Payment);
 }
