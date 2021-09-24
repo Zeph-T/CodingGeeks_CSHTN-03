@@ -22,8 +22,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import queryString from "query-string";
 import Wishlist from "./Wishlist";
-import { LinearProgress } from "@material-ui/core";
-import PrescriptionItem from "./PrescriptionItem";
+import { CircularProgress } from "@material-ui/core";
 import PrescriptionResult from "./PrescriptionResults";
 
 const stripePromise = loadStripe(
@@ -47,6 +46,7 @@ function Header(props) {
   const [amount, setAmount] = useState(0);
   //var a = false;
   const [prescription, setPrescription] = useState([]);
+  const [loading, setLoading] = useState(false);
 
 
   useEffect(() => {
@@ -75,6 +75,7 @@ function Header(props) {
             props.openSnackBar(
               "Error ocurred while analyzing the prescription"
             );
+            setLoading(false);
             setUrl(null);
           } else {
             console.log(response);
@@ -88,10 +89,12 @@ function Header(props) {
                 props.openSnackBar(
                   "Error ocurred while fetching results from backend"
                 );
+                setLoading(false);
               }
               else {
                 console.log(response);
                 setPrescription(response);
+                setLoading(false);
               }
             })
           }
@@ -100,6 +103,7 @@ function Header(props) {
           console.log(err);
           props.openSnackBar("Error ocurred while connecting to the model");
           setUrl(null);
+          setLoading(false);
         });
     }
   }, [ url]);
@@ -125,6 +129,7 @@ function Header(props) {
 
   const postDetails = () => {
     if (imageType.includes("image")) {
+      setLoading(true);
       const data = new FormData();
       data.append("file", image);
       data.append("upload_preset", "Instafam");
@@ -136,7 +141,6 @@ function Header(props) {
         .then((res) => res.json())
         .then((data) => {
           setUrl(data.url);
-          setOpen(false);
           // console.log(url);
         })
         .catch((err) => {
@@ -219,7 +223,7 @@ function Header(props) {
           </div>
         </HeaderStyled>
       </div>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} maxWidth='md'>
         <DialogTitle>Upload Prescription</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -250,13 +254,17 @@ function Header(props) {
           </label>
           <div>
             {image && <Typography variant="body1"> {imageName} </Typography>}
+            {loading && <CircularProgress />}
           </div>
           {/* {console.log(imageName)} */}
+          {prescription.length>0 && <PrescriptionResult results={prescription} {...props} />}
+          
         </DialogContent>
         <DialogActions>
           <Button onClick={() => handleCancelDialog()}>Cancel</Button>
           <Button onClick={() => postDetails()}>Upload</Button>
         </DialogActions>
+        
       </Dialog>
       <Dialog fullWidth open={paymentOpen}>
         <DialogContent>
@@ -295,7 +303,7 @@ function Header(props) {
           </Button>
         </DialogActions>
       </Dialog>
-      <PrescriptionResult results={prescription} {...props} />
+     
     </div>
   );
 }
