@@ -7,40 +7,53 @@ import DialogContentText from "@mui/material/DialogContentText";
 import { Fab } from "@material-ui/core";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import CartItem from "./CartItem";
+import WrappedButton from "../common/WrappedButton";
+import { Typography } from "@mui/material";
 
 const Cart = ({ cart, setCartOpen, cartOpen }) => {
-  const [searchItem, setQuery] = useState("");
-  useEffect(() => {
-    async function Start() {
-     
+  const getTotal = () => {
+    let total = 0;
+    for (let item in cart) {
+      total += cart[item].item.cost * cart[item].qty;
     }
-    Start();
-  }, []);
+    console.log(total);
+    return total;
+  };
   return (
     <Dialog
       maxWidth="xl"
       open={cartOpen}
-      onClose={setCartOpen}
+      onClose={() => setCartOpen(false)}
       fullWidth={true}
     >
-      <DialogTitle>Optional sizes</DialogTitle>
+      <DialogTitle style={{ textAlign: "center" }}>Cart</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          You can set my maximum width and whether to adapt or not.
+          {cart.map((cart_item) => (
+            <CartItem cart_item={cart_item} />
+          ))}
         </DialogContentText>
-        <Box
-          noValidate
-          component="form"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            m: "auto",
-            width: "fit-content",
-          }}
-        ></Box>
+
+        <div className="row d-flex justify-content-between">
+          {" "}
+          <Typography
+            component="h1"
+            variant="h5"
+            style={{ textAlign: "center" }}
+          >
+            Total Amount To Pay: {getTotal()} Only
+          </Typography>
+          <WrappedButton
+            variant="contained"
+            color="primary"
+            name="Proceed To CheckOut"
+            style={{ marginTop: "1.4rem", marginRight: "1rem" }}
+          />
+        </div>
       </DialogContent>
       <DialogActions>
-        <Button onClick={setCartOpen}>Close</Button>
+        <Button onClick={() => setCartOpen(false)}>Close</Button>
       </DialogActions>
     </Dialog>
   );
