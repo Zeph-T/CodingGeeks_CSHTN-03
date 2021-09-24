@@ -45,8 +45,10 @@ const PrescriptionItem = (props) => {
     const handleQuantityChange = (event) => {
         if (event.target.value < 1)
             setQuantity(1);
+        if (event.target.value >quantity)
+        setQuantity(quantity);
         else
-            setQuantity(event.target.value)
+        setQuantity(event.target.value)
     }
 
 

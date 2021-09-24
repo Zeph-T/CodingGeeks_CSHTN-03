@@ -24,7 +24,8 @@ import queryString from "query-string";
 import Wishlist from "./Wishlist";
 import { CircularProgress } from "@material-ui/core";
 import PrescriptionResult from "./PrescriptionResults";
-
+import { IconButton } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 const stripePromise = loadStripe(
   "pk_test_51Iiee4SAPK4NnRb13KoXME97VtkAhUnA8X09Scub7ZhYE5lZwHzBfWCHKvDGRg5Yy4dxhwLmsPSl1B6n4q088tT3000EtpY0yV"
 );
@@ -267,6 +268,7 @@ function Header(props) {
         
       </Dialog>
       <Dialog fullWidth open={paymentOpen}>
+      <IconButton style={{marginLeft: '35rem'}} onClick={()=> setPaymentOpen(false)}><CloseIcon /></IconButton>
         <DialogContent>
           <div>
             <Elements stripe={stripePromise}>

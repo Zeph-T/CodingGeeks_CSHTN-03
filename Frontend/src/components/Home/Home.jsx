@@ -11,8 +11,21 @@ import logo5 from "../../static/5.jpeg";
 import logo6 from "../../static/6.jpeg";
 import logo7 from "../../static/7.jpeg";
 import logo8 from "../../static/8.jpeg";
+import Slider from "react-slick";
+
+
 let logoarray = [logo1, logo2, logo3, logo4, logo5, logo6, logo7, logo8];
+
+
 const Home = (props) => {
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 5,
+    slidesToScroll: 5
+  };
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -51,7 +64,9 @@ const Home = (props) => {
     return logoarray[number];
   };
   return (
+    <div>
     <div className="container-fluid">
+      
       {products.map((product) => (
         <div className="mt-5">
           <Container component="main" maxWidth="xl">
@@ -72,8 +87,10 @@ const Home = (props) => {
 
               <hr />
               <div className="row d-flex justify-content-between">
+              
                 {product.items.map((item) => (
-                  <div className="col p-2 m-4 prod-info-home">
+                 
+                   <div className="col p-2 m-4 prod-info-home">
                     <img
                       className="prod-img-home"
                       alt="medicine"
@@ -90,12 +107,16 @@ const Home = (props) => {
                       Price: <span className="price">&#x20b9; {item.cost}</span>
                     </p>
                   </div>
+                 
                 ))}
-              </div>
+                </div>
+                
+              {/* </div> */}
             </Paper>
           </Container>
         </div>
       ))}
+    </div>
     </div>
   );
 };
