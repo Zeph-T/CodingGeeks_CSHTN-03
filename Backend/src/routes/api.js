@@ -32,4 +32,5 @@ module.exports = (router) => {
   router.get('/product/:id', itemApi.getProduct);
   router.put('/removeItemsFromCart/:id',itemApi.removeItemFromCart);
   router.post('/payment',userApi.Payment);
+  router.get('/getPastOrders',itemApi.getPastOrders);
 }

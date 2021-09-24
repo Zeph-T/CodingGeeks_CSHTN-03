@@ -30,6 +30,7 @@ function Search({ searchItem, match }) {
       let resultData = [];
       resultData.push(...data.byCategory);
       resultData.push(...data.byText);
+      resultData.push(...data.byManufacturer);
       setResults(resultData);
       setLoading(false);
     }

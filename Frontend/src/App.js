@@ -20,7 +20,7 @@ import ResetPassword from "./components/Auth/ResetPassword";
 import Profile from './components/Home/profile'
 
 function App(props) {
-  const [user, setUser] = useState(); // to save user details.
+  const [user, setUser] = useState({}); // to save user details.
   const oSnackBar = React.createRef();
 
   let openSnackBar = (message) => {
@@ -72,7 +72,7 @@ function App(props) {
         <Route exact path='/resetPassword' render={(props)=><ResetPassword  openSnackBar={openSnackBar}  {...props} />}/>
         <Route path="/logout" exact component={Logout} />
         <Route path="/search" exact component={Search} />
-        <Route path='/profile' render={(props)=> <Profile openSnackBar={openSnackBar} {...props}/>} />
+        <Route path='/profile' render={(props)=> <Profile openSnackBar={openSnackBar} user={user} {...props}/>} />
         <Route path="/" exact component={SelectPage} />
       </Switch>
       <CustomSnackBar ref={oSnackBar} />

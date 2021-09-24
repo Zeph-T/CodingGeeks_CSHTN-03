@@ -26,7 +26,13 @@ const userSchema = mongoose.Schema({
     }],
     pastOrders : [{
         transactionId : String,
-        itemsPurchased  : []
+        items  : [{
+            item : {
+                type:mongoose.Types.ObjectId,
+                ref : 'Medicine'
+            },
+            qty : Number
+        }]
     }]
 })
 

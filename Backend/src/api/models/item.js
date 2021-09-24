@@ -4,6 +4,7 @@ const itemSchema = mongoose.Schema({
     name:{type :String},
     type:{type:String},
     categories : [{type : String}],
+    manufacturer : {type:String},
     category : {type :String},
     manufacturer : {type :  String},
     cost : { type: Number},
