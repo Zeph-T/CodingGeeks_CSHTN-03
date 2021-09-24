@@ -23,6 +23,7 @@ import httpService from "../../services/httpService";
 import CheckoutForm from "./CheckoutForm";
 import { Elements} from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import Wishlist from "./Wishlist";
 
 
 const stripePromise = loadStripe(
@@ -239,8 +240,13 @@ function Header(props) {
           </Elements>
               </div>
           </DialogContent>
-        </Dialog>
+      </Dialog>
       <Cart cart={cart} cartOpen={cartOpen} onClickCheckout={onClickCheckout} setCartOpen={setCartOpen} />
+      <Wishlist
+        wishlist={wishlist}
+        wishOpen={wishOpen}
+        setwishOpen={setwishOpen}
+      />
     </div>
   );
 }
