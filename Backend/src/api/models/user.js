@@ -10,12 +10,19 @@ const userSchema = mongoose.Schema({
     passwordResetToken : {type:String},
     isActive : {type:Boolean , default : false},
     cart  :[{
-        item : mongoose.Types.ObjectId,
-        quantity : Number
+        item :{
+            type:mongoose.Types.ObjectId,
+            ref : 'Medicince'
+        },
+        qty : Number
+    }],
+    wishlist : [{
+        type:mongoose.Types.ObjectId,
+        ref : 'Medicince'
     }],
     scannedPrescriptions : [{
         prescription_url : String,
-        extractedMedicines : [{type:mongoose.Types.ObjectId}]
+        extractedMedicines : [{type:mongoose.Types.ObjectId ,  ref : 'Medicine'}]
     }]
 })
 
