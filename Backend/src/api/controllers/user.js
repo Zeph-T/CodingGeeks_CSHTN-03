@@ -5,6 +5,8 @@ import jwt from 'jsonwebtoken';
 import axios from 'axios';
 import  {envVariables} from "../../config/env";
 import { validateUserEmail , oEmailContextTexts, sendEmail ,TokenTypes, validateToken,validateUser} from "./apiHelper";
+import Q from "q";
+import Item from "../models/Item";
 export function signup(req,res){
     try{
         let userInfo = req.body;
@@ -101,7 +103,7 @@ export function login(req,res){
                 return res.status(408).send({error : 'You have not activated your account,Click on the Link sent to your Email'});
             }
             else if(user.validPassword(userInfo.password)){
-                validateUser(req,res,user,false);
+            validateUser(req,res,user,false);
             }else{
                 return res.status(404).send({error:'Password Invalid!'});
             }
@@ -111,5 +113,148 @@ export function login(req,res){
         })
     }catch(err){
         return res.status(400).send({error : err.stack});
+    }
+}
+
+
+export function forgotPassword(req,res){
+    var email = req.body.email.toLowerCase();
+    try {
+      User.findOne({
+        'email': email,
+        'isActive' : true
+      }, function(err, user) {
+        if (err || !user) {
+            return res.status(400).send({error : err.stack});
+        }
+        if (user) {
+          user.passwordResetToken = jwt.sign({
+            email: email,
+            type: TokenTypes.passwordResetToken
+          }, envVariables.jwt_secret, {
+            expiresIn: 60 * 60 * 24
+          });
+          user.save(function(err, updatedUser) {
+            if (err) {
+                return res.status(400).send({error : err});
+            }
+            let resetPasswordLink =  envVariables.base_origin + '/resetPassword?passwordResetToken=' + updatedUser.passwordResetToken;
+            var emailText = "Hey "+ updatedUser.name
+             +"!<br/><br/>" +"It looks like you might have forgotten your password for MedZone. Don't worry, we’ve got your back.<br/><br/>Click the button below to change your password:<br/>" +
+            "<br/><div style='text-align:center;'><a href='"+ resetPasswordLink +"' style='text-decoration: none;padding: 0.75rem;background: #3f51b5;color: white;font-size: large;border-radius:0.5rem' target='_blank'>Reset Password</a></div><br/>" + "Or click on the link below:<br/><br/><a target='_blank' href='"+ resetPasswordLink +"'>"+resetPasswordLink+ "</a><br/><br/>Always here for you,<br/> MedZone Team <br/><br/>"
+            let subjectText = 'Password Reset Link';
+            sendEmail(email, emailText ,subjectText ).then(function(isValid) {
+              if (isValid) {
+                res.status(200);
+                return res.json({status: 'Mail Sent to the registered email'})
+              }
+            }).catch(function() {
+                res.status(400);
+                return res.send({error: err.stack});
+            });
+          })
+        }
+      });
+    } catch (err) {
+      res.status(400);
+    return res.send({error: err.stack});
+      }
+}
+
+export function Payment(req,res){
+    const user = req.user
+    stripe.customers
+      .create({
+        email: req.body.stripeEmail,
+        source: req.body.stripeToken,
+        name: user.name,
+        address: {
+          line1: 'TC 9/4 Old MES colony',
+          postal_code: '110092',
+          city: 'New Delhi',
+          state: 'Delhi',
+          country: 'India',
+        },
+      })
+      .then((customer) => {
+        return stripe.charges.create({
+          amount: req.amount, // Charing Rs 25
+          description: 'Demo medical Bill',
+          currency: 'INR',
+          customer: customer.id,
+        })
+      })
+      .then((charge) => {
+        try {
+        if(user.pastOrders.length == 0){
+            user.pastOrders = []
+        }
+        user.pastOrders.push(charge.id);
+          user.save(async (err) => {
+            if (err) {
+              console.log(err)
+              res.status(400).json({ message: err.message })
+            } else {
+            await Q.all(req.body.items.map(async oItem =>{
+                try{
+                    await Item.findOneAndUpdate({_id : mongoose.Types.ObjectId(oItem.Item._id)},{$inc : {qty : -oItem.qty}})
+                }catch(err){
+                    console.log(err);
+                }
+            }))
+            console.log('Transaction Successfull')
+            res.status(200).json({ message: 'successful' })
+            }
+          })
+        } catch (err) {
+          res.status(400).json({ message: err })
+        }
+      })
+}
+
+export function verifyPasswordToken(req,res){
+    if(req.body.token){
+        validateToken(req.body.token,TokenTypes.passwordResetToken).then(response=>{
+            if(response.isValid){
+                return res.status(200).send({isValid : true});
+            }
+        }).catch(err=>{
+            return res.status(200).send({isValid : false});
+        })
+    }else{
+        return res.status(200).send({isValid : false});
+    }
+}
+export function resetPassword(req,res){
+    var userInfo = req.body;
+    try{
+        validateToken(userInfo.token,TokenTypes.passwordResetToken).then(response=>{
+            if(response.isValid){
+                userInfo.email = response.payload.email;
+                return true;
+            }
+        }).then(isValid=>{
+            if(isValid){
+                User.findOne({'email' : userInfo.email,passwordResetToken : userInfo.token , isActive : true}).then(oUser=>{
+                    oUser.passwordResetToken = "";
+                    oUser.password = oUser.generateHash(userInfo.password);
+                    oUser.save(err=>{
+                        if(err){
+                            return res.status(400).send({error : err});
+                        }else{
+                            return res.send({success: true});
+                        }
+                    })
+                }).catch(err=>{
+                    return res.status(400).send({error  : err});
+                }) 
+            }else{
+                return res.status(200).send({error : 'Token is Invalid'});
+            }
+        }).catch(err=>{
+            return res.status(200).send({error  :'Token Expired'});
+        })
+    }catch(err){
+        return res.status(400).send({error: err});
     }
 }

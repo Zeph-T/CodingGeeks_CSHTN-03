@@ -16,6 +16,7 @@ import "./App.css";
 import Search from "./components/Search/Search";
 import { api } from "./utilities";
 import SelectPage from "./components/Home/Selectpage";
+import ResetPassword from "./components/Auth/ResetPassword";
 
 function App(props) {
   const [user, setUser] = useState(); // to save user details.
@@ -49,7 +50,7 @@ function App(props) {
           .catch((err) => {
             console.log(err);
           });
-      } else {
+      } else if(props.location.pathname !=="/resetPassword"){
         props.history.push("login");
       }
     }
@@ -57,7 +58,7 @@ function App(props) {
   }, []);
   return (
     <BrowserRouter basename="/">
-      {user && user._id && <Navbar openSnackBar={openSnackBar} user={user} /> }
+      {user && user._id && !['/resetPassword','/login'].includes(props.location) && <Navbar openSnackBar={openSnackBar} user={user} /> }
       <Switch>
         {/* All the routes are handled here */}
         <Route path="/login" render={(props)=><Auth openSnackBar={openSnackBar} {...props}/> } />
@@ -67,6 +68,7 @@ function App(props) {
           path="/product/:id"
           render={(props) => <Product openSnackBar={openSnackBar} {...props} user={user} />}
         />
+        <Route exact path='/resetPassword' render={(props)=><ResetPassword  openSnackBar={openSnackBar}  {...props} />}/>
         <Route path="/logout" exact component={Logout} />
         <Route path="/search" exact component={Search} />
         <Route path="/" exact component={SelectPage} />

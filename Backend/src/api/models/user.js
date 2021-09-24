@@ -23,6 +23,9 @@ const userSchema = mongoose.Schema({
     scannedPrescriptions : [{
         prescription_url : String,
         extractedMedicines : [{type:mongoose.Types.ObjectId ,  ref : 'Medicine'}]
+    }],
+    pastOrders : [{
+        transactionId : String
     }]
 })
 
