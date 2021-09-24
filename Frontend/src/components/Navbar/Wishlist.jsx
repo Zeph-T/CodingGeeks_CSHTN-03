@@ -1,43 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Fab } from "@material-ui/core";
+import DialogContentText from "@mui/material/DialogContentText";
+import http from "../../services/httpService";
+import { api } from "../../utilities";
+import Item from "./wishitem";
+import Button from "@mui/material/Button";
 
 
-const Wishlist = ({ wishlist }) => {
-  const [searchItem, setQuery] = useState("");
-  useEffect(() => {
-    async function Start() {}
-    Start();
-  }, []);
+const Wishlist = ({ wishlist, setwishOpen, wishOpen }) => {
   return (
     <Dialog
-      fullWidth={fullWidth}
-      maxWidth={maxWidth}
-      open={open}
-      onClose={handleClose}
+      maxWidth="lg"
+      open={wishOpen}
+      onClose={() => setwishOpen(false)}
+      fullWidth={true}
     >
-      <DialogTitle>Optional sizes</DialogTitle>
+      <DialogTitle style={{ textAlign: "center" }}>Wishlist</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          You can set my maximum width and whether to adapt or not.
+          {wishlist.map((product) => (
+            <Item product={product}/>
+          ))}
         </DialogContentText>
-        <Box
-          noValidate
-          component="form"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            m: "auto",
-            width: "fit-content",
-          }}
-        >
-        </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Close</Button>
+        <Button onClick={() => setwishOpen(false)}>Close</Button>
       </DialogActions>
     </Dialog>
   );

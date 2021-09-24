@@ -18,6 +18,7 @@ import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { Typography } from "@material-ui/core";
 import Cart from "./Cart";
+import Wishlist from "./Wishlist";
 
 function Header(props) {
   const [open, setOpen] = useState(false);
@@ -225,6 +226,11 @@ function Header(props) {
         </DialogActions>
       </Dialog>
       <Cart cart={cart} cartOpen={cartOpen} setCartOpen={setCartOpen} />
+      <Wishlist
+        wishlist={wishlist}
+        wishOpen={wishOpen}
+        setwishOpen={setwishOpen}
+      />
     </div>
   );
 }
