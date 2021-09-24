@@ -59,7 +59,7 @@ function App(props) {
   }, []);
   return (
     <BrowserRouter basename="/">
-      {user && user._id && !['/resetPassword','/login'].includes(props.location) && <Navbar openSnackBar={openSnackBar} user={user} /> }
+      {user && user._id && !['/resetPassword','/login'].includes(props.location) && <Navbar openSnackBar={openSnackBar} user={user} {...props} /> }
       <Switch>
         {/* All the routes are handled here */}
         <Route path="/login" render={(props)=><Auth openSnackBar={openSnackBar} {...props}/> } />

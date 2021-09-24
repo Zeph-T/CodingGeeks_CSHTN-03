@@ -22,6 +22,9 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import queryString from "query-string";
 import Wishlist from "./Wishlist";
+import { LinearProgress } from "@material-ui/core";
+import PrescriptionItem from "./PrescriptionItem";
+import PrescriptionResult from "./PrescriptionResults";
 
 const stripePromise = loadStripe(
   "pk_test_51Iiee4SAPK4NnRb13KoXME97VtkAhUnA8X09Scub7ZhYE5lZwHzBfWCHKvDGRg5Yy4dxhwLmsPSl1B6n4q088tT3000EtpY0yV"
@@ -43,6 +46,9 @@ function Header(props) {
   const [paymentOpen, setPaymentOpen] = useState(false)
   const [amount, setAmount] = useState(0);
   //var a = false;
+  const [prescription, setPrescription] = useState([]);
+
+
   useEffect(() => {
     //  
     //  if (Object.keys(query).length !== 0 && a === false) setSearch(query.search);
@@ -72,13 +78,31 @@ function Header(props) {
             props.openSnackBar(
               "Error ocurred while analyzing the prescription"
             );
+            setUrl(null);
           } else {
-            // fetch a backend route...jiska muje pata nahi hai
+            console.log(response);
+            setUrl(null);
+            httpService.post(api.BASE_URL + api.GET_EXTRACTED_ITEMS, {
+              words: response.data.result,
+            },{headers: { accesstoken: jwt }}
+            )
+            .then((response)=> {
+              if(response.error){
+                props.openSnackBar(
+                  "Error ocurred while fetching results from backend"
+                );
+              }
+              else {
+                console.log(response);
+                setPrescription(response);
+              }
+            })
           }
         })
         .catch((err) => {
           console.log(err);
-          props.openSnackBar("Error ocurred!");
+          props.openSnackBar("Error ocurred while connecting to the model");
+          setUrl(null);
         });
     }
   }, [cart, url]);
@@ -137,7 +161,7 @@ function Header(props) {
       <div className="header_wraper">
         <HeaderStyled>
           <div className="left-items" style={{ padding: "2px 5px" }}>
-            <img src={logo} className="brand_logo" width="80px" height="80px" />
+            <a href='/'><img src={logo} className="brand_logo" width="100px" height="100px" /></a>
             <Button
               style={{ marginLeft: "2rem" }}
               color="inherit"
@@ -274,100 +298,10 @@ function Header(props) {
           </Button>
         </DialogActions>
       </Dialog>
+      <PrescriptionResult results={prescription} {...props} />
     </div>
   );
 }
 
-// function CheckoutForm() {
-//   const [isPaymentLoading, setPaymentLoading] = useState(false);
-//   // const stripe = useStripe();
-//   const elements = useElements();
-//   const payMoney = async (e) => {
-//     const token = await stripe.tokens.create({
-//       card: elements.getElement(CardElement)
-//     })
-//     console.log(token);
-//     console.log("token recived");
-//     // const token = await stripe.tokens.create({
-//     //   card: {
-//     //     number: '4242424242424242',
-//     //     exp_month: 9,
-//     //     exp_year: 2022,
-//     //     cvc: '314',
-//     //   },
-//     // });
-//     // e.preventDefault();
-//     // if (!stripe || !elements) {
-//     //   return;
-//     // }
-//     // setPaymentLoading(true);
-//     // const clientSecret = getClientSecret();
-//     // const paymentResult = await stripe.confirmCardPayment(clientSecret, {
-//     //   payment_method: {
-//     //     card: elements.getElement(CardElement),
-//     //     billing_details: {
-//     //       name: "Faruq Yusuff",
-//     //     },
-//     //   },
-//     // });
-//     // setPaymentLoading(false);
-//     // if (paymentResult.error) {
-//     //   alert(paymentResult.error.message);
-//     // } else {
-//     //   if (paymentResult.paymentIntent.status === "succeeded") {
-//     //     alert("Success!");
-//     //   }
-//     // }
-//   };
-
-//   return (
-//     <div
-//       style={{
-//         padding: "3rem",
-//       }}
-//     >
-//       <div
-//         style={{
-//           maxWidth: "500px",
-//           margin: "0 auto",
-//         }}
-//       >
-//         <form
-//           style={{
-//             display: "block",
-//             width: "100%",
-//           }}
-//           onSubmit = {payMoney}
-//         >
-//           <div
-//             style={{
-//               display: "flex",
-//               flexDirection: "column",
-//               alignItems: "center",
-//             }}
-//           >
-//             <CardElement
-//               className="card"
-//               options={{
-//                 style: {
-//                   base: {
-//                     width : '100%'
-//                   }
-//                 },
-//               }}
-//             />
-//             <button
-//               className="pay-button"
-//               disabled={isPaymentLoading}
-//               onClick={payMoney}
-//             >
-//               {isPaymentLoading ? "Loading..." : "Pay"}
-//             </button>
-//           </div>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// }
 
 export default Header;
