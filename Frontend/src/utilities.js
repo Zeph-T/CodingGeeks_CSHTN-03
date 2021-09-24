@@ -8,5 +8,10 @@ export const api = {
     GET_ITEMS_FOR_HOME_PAGE : '/api/itemsForHome',
     GET_CATEGORY_ITEMS : "/api/category/",
     GET_SEARCH_ITEMS : '/api/items?',
-    GET_PRODUCT : '/api/product/'
+    GET_PRODUCT : '/api/product/',
+    GET_EXTRACTED_ITEMS : '/api/getExtractedItems',
+    ADD_CART : '/api/addToCart',
+    ADD_TO_WISHLIST : '/api/addToWishlist',
+    GET_CART : '/api/getCart',
+    GET_WISHLIST : '/api/getWishList'
 }

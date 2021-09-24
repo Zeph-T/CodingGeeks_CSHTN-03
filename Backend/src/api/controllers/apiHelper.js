@@ -122,7 +122,7 @@ export function validateToken(token,tokenType,shouldIgnoreExpiration=false){
   jwt.verify(token,envVariables.jwt_secret,{ignoreExpiration : shouldIgnoreExpiration},(err,decoded)=>{
     if(!err && decoded && (!tokenType || tokenType == decoded.type)){
       if(tokenType === 'activationToken'){
-        User.findOneAndUpdate({ActivationToken : token},{$set : {isActive : true}},(err,user)=>{
+        User.findOneAndUpdate({activationToken : token},{$set : {isActive : true}},(err,user)=>{
           if(err){
             deferred.reject({
               errors : { name: {message : "Invalid User"} }
