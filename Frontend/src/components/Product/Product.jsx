@@ -13,7 +13,6 @@ import {
 import { api } from "../../utilities";
 import http from "../../services/httpService";
 import { Form } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import useStyles from "./styles";
 
 const Product = (props) => {

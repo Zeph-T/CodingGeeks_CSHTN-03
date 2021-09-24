@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import { api } from "../../utilities";
 import http from "../../services/httpService";
 import { LinearProgress } from "@material-ui/core";

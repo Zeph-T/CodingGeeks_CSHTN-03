@@ -10,7 +10,7 @@ function Header() {
   const handleKeyPress = (event) => {
       if (event.key === "Enter") {
         if (!search.length) window.location = '/';
-        else window.location = `?search=${search}`
+        else window.location = `/?search=${search}`
       }
   };
   return (

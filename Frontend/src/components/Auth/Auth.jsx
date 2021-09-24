@@ -10,7 +10,6 @@ import {
 } from "@material-ui/core";
 import Joi from "joi-browser";
 import { Alert } from "@material-ui/lab";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { ToastContainer, toast } from "react-toastify";
 import useStyles from "./styles";
 import Input from "../common/Input";
