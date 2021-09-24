@@ -52,7 +52,7 @@ function App(props) {
   }, []);
   return (
     <BrowserRouter basename="/">
-      {user && user._id && <Navbar user={user} /> }
+      {user && user._id && <Navbar openSnackBar={openSnackBar} user={user} /> }
       <Switch>
         {/* All the routes are handled here */}
         <Route path="/login" render={(props)=><Auth openSnackBar={openSnackBar} {...props}/> } />

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import express from 'express'
 import bodyParser from 'body-parser'
-import { envVariables } from './config/env'
+import { envVariables } from './config/env.js'
 import cors from 'cors'
 
 mongoose
