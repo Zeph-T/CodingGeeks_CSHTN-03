@@ -8,7 +8,7 @@ module.exports = (router) => {
         if(isValid){
             next();
         }else{
-            res.status(400);
+            res.status(200);
             return res.send({error:'Auth Token Expired'});
         }
     }).catch(err=>{

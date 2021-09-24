@@ -7,17 +7,25 @@ import {
 } from "@material-ui/core";
 import http from "../../services/httpService";
 import '../../App.css';
-const Home = () => {
+const Home = (props) => {
   const [products, setProducts] = useState([]);
   const [loading,setLoading] = useState(true);
   useEffect(() => {
     async function Start() {
       const jwt = localStorage.getItem("token");
-      const { data } = await http.get(
+      try{
+        const { data } = await http.get(
         api.BASE_URL + api.GET_ITEMS_FOR_HOME_PAGE,
-        { headers: { accesstoken: jwt } }
-      );
-      setProducts(data);
+          { headers: { accesstoken: jwt } }
+        );
+        if(data.error){
+          props.history.push('login')
+        }
+        console.log(data);
+        setProducts(data);
+      }catch(err){
+        props.history.push('login')
+      }
       setLoading(false);
     }
     Start();

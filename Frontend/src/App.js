@@ -60,21 +60,10 @@ function App(props) {
       {user && user._id && <Navbar user={user} />}
       <Switch>
         {/* All the routes are handled here */}
-        <Route
-          path="/login"
-          render={(props) => <Auth openSnackBar={openSnackBar} {...props} />}
-        />
-        <Route
-          path="/register"
-          render={(props) => (
-            <Register openSnackBar={openSnackBar} {...props} />
-          )}
-        />
-        <Route
-          path="/activateUser"
-          render={(props) => <Activate {...props} />}
-        />
-        <Route
+        <Route path="/login" render={(props)=><Auth openSnackBar={openSnackBar} {...props}/> } />
+        <Route path="/register" render={(props)=><Register openSnackBar={openSnackBar} {...props}/> }  />
+        <Route path="/activateUser" render={(props)=> <Activate {...props} />} />
+        <ProtectedRoute
           path="/product/:id"
           render={(props) => <Product {...props} user={user} />}
         />

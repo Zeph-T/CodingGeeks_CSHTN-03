@@ -16,7 +16,7 @@ import { Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import useStyles from "./styles";
 
-const Product = ({ history, match, user }) => {
+const Product = (props) => {
   const [cart, setCart] = useState([]);
   // const product = {
   //   _id: "12142",
@@ -33,7 +33,7 @@ const Product = ({ history, match, user }) => {
   useEffect(() => {
     async function Start() {
       const jwt = localStorage.getItem("token");
-      const { data } = await http.get(api.BASE_URL + api.GET_PRODUCT + match.params.id, {
+      const { data } = await http.get(api.BASE_URL + api.GET_PRODUCT + props.computedMatch.params.id, {
         headers: { accesstoken: jwt },
       });
       setProduct(data);
@@ -44,7 +44,7 @@ const Product = ({ history, match, user }) => {
   const classes = useStyles();
   const [qty, setQty] = useState(1);
   const addToCartHandler = () => {
-    history.push(`/cart`);
+    props.history.push(`/cart`);
   };
   const handleSubmit = () => {};
   if (loading === true) {
