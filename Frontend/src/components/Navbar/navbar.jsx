@@ -35,16 +35,19 @@ function Header(props) {
   const [url, setUrl] = useState("");
   const [imageName, setImageName] = useState("");
   const [imageType, setImageType] = useState("");
-  const [search, setSearch] = useState("");
+  const query = queryString.parse(window.location.search);
+    const [search, setSearch] = useState(query.search);
   const jwt = localStorage.getItem("token");
   const [cartOpen, setCartOpen] = useState(false)
   const [wishOpen, setwishOpen] = useState(false)
   const [paymentOpen, setPaymentOpen] = useState(false)
   const [amount, setAmount] = useState(0);
+  //var a = false;
   useEffect(() => {
+    //  
+    //  if (Object.keys(query).length !== 0 && a === false) setSearch(query.search);
+    //   a = true;
     async function Start() {
-      const query = queryString.parse(props.location.search);
-      if (Object.keys(query).length !== 0) setSearch(query.search);
       const { data } = await http.get(api.BASE_URL + api.GET_CART, {
         headers: { accesstoken: jwt },
       });
@@ -79,7 +82,6 @@ function Header(props) {
         });
     }
   }, [cart, url]);
-
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const imageStateUpdate = (event) => {

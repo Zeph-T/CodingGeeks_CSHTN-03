@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Grid } from "@mui/material";
+import { Autocomplete, Grid, Typography } from "@mui/material";
 import { api } from "../../utilities";
 import http from "../../services/httpService";
+import { ReactComponent as NoData } from "../../static/nodata.svg";
+
+
 import { LinearProgress } from "@material-ui/core";
 
 function Search({ searchItem, match }) {
@@ -35,7 +38,12 @@ function Search({ searchItem, match }) {
     );
   } else if (results.length == 0) {
     return (
-      <div></div>
+      <div style={{ alignItems: "center" }} className="nodata">
+        <h2 className="nodata-text">
+          No results found for search term "{searchItem}"
+        </h2>
+        <NoData height="400px" width="400px"/>
+      </div>
     );
   }
   return (

@@ -1,10 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 * {
-  text-decoration: none !important; 
+  text-decoration: none !important;
 }
 a {
-   box-shadow: none !important;
-   cursor: pointer;
+  box-shadow: none !important;
+  cursor: pointer;
 }
 .left-items {
   display: flex;
@@ -48,7 +48,12 @@ a {
     margin-right: 20px;
   }
 }
-
+.nodata {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 .search-bar {
   margin-right: 50px;
   padding: 10px 10px;
@@ -172,4 +177,10 @@ a {
 
 .total-amount {
   padding-top: 8px !important;
+}
+
+.nodata-text {
+  font-size: 25px;
+  font-weight: 400;
+  font-family: "Roboto";
 }
