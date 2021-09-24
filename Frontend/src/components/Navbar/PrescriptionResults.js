@@ -7,8 +7,8 @@ const PrescriptionResult = (props) => {
     return (
         <div>
             <Grid container>
-                {results.map((item) => {
-                    <PrescriptionItem item={item} />
+                {props.results.map((item) => {
+                    <PrescriptionItem product={item} {...props} />
                 })}
             </Grid>
         </div>
