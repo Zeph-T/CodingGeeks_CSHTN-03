@@ -24,6 +24,7 @@ function Header(props) {
   const [url, setUrl] = useState("")
   const [imageName, setImageName] = useState("");
   const [imageType, setImageType] = useState("");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     if (url) {
@@ -42,7 +43,7 @@ function Header(props) {
             props.openSnackBar("Error ocurred while analyzing the prescription")
           }
           else {
-           // fetch a backend route...jiska muje pata nahi hai
+            // fetch a backend route...jiska muje pata nahi hai
           }
         }).catch(err => {
           console.log(err)
@@ -102,6 +103,14 @@ function Header(props) {
 
 
   }
+
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      if (!search.length) window.location = '/';
+      else window.location = `/?search=${search}`
+    }
+  };
   return (
     <div>
       <div className="header_wraper">
@@ -113,37 +122,48 @@ function Header(props) {
               Upload Prescription
             </Button>
 
-            {/* <NavLink className="nav_link">MEN</NavLink>
-          <NavLink className="nav_link">WOMEN</NavLink>
-          <NavLink className="nav_link">KIDS</NavLink>
-          <NavLink className="nav_link">LIFESTYLE</NavLink>
-          <NavLink className="nav_link">DISCOVER</NavLink> */}
           </div>
-
           <div className="right-items">
             <input
               type="text"
               className="search-bar"
               placeholder="Search for medicines, brands and more"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyPress={handleKeyPress}
             />
             <div className="profile-links">
               <div>
                 <div className="link">
                   <i class="fa fa-user-circle-o fa-lg" aria-hidden="true"></i>
                 </div>
-                <a className="link" href="/me">Profile</a>
+                <a className="link" href="/me">
+                  Profile
+                </a>
               </div>
               <div>
                 <div className="link">
                   <i class="fa fa-shopping-cart fa-lg" aria-hidden="true"></i>
                 </div>
-                <a className="link" href="/cart">Cart</a>
+                <a className="link" href="/cart">
+                  Cart
+                </a>
+              </div>
+              <div>
+                <div className="link">
+                  <i class="fa fa-bookmark fa-lg" aria-hidden="true"></i>
+                </div>
+                <a className="link" href="/wishlist">
+                  Wishlist
+                </a>
               </div>
               <div>
                 <div className="link">
                   <i class="fa fa-sign-out fa-lg" aria-hidden="true"></i>
                 </div>
-                <a className="link" href="/logout">Sign Out</a>
+                <a className="link" href="/logout">
+                  Sign Out
+                </a>
               </div>
             </div>
           </div>

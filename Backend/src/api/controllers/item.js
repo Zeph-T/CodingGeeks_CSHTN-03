@@ -1,6 +1,7 @@
 import Item from '../models/item'
 import * as apiHelper from './apiHelper';
 import Q, { async } from 'q';
+import User from '../models/user';
 export async function filterStringsToArrays(req, res) {
   await Item.find({}).then(async (oItems) => {
     await oItems.forEach((oItem) => {
@@ -29,12 +30,18 @@ export async function getItems(req, res) {
     if (error) {
       res.status(400)
     } else {
-      console.log(data)
       res.status(200).json({ byText: data[0], byCategory: data[1] })
     }
   })
 }
-
+export async function getProduct(req, res) {
+  try {
+    const product = await Item.findById(req.params.id);
+    if (product) res.send(product);
+  } catch (ex) {
+    res.status(400).send({error: err});
+  }
+}
 export async function getItemsForHome(req, res) {
   try{
     let categories = ['EyeCare', 'HealthFood', 'SkinCare', 'Ayurveda', 'ProteinSupplements']
@@ -80,4 +87,75 @@ export async function checkForItems(req, res) {
       })
   }))
   return res.status(200).send(items);
+}
+
+
+export function addToCart(req,res){
+  try{
+    if(req.body && req.body.itemId && req.body.qty){
+      User.findOneAndUpdate({_id : req.user._id} , {$push : { cart : {item : mongoose.Types.ObjectId(req.body.itemId) , qty : req.body.qty} } },(err,oUser)=>{
+        if(err){
+          return res.status(400).send({success : false});
+        }else{
+          return res.status(200).send({success : true});
+        }
+      })
+    }else{
+      throw 'required fields error';
+    }
+  }catch(err){
+    return res.status(400).send({success : false});
+  }
+}
+
+
+export function addToWishList(req,res){
+  try{
+    if(req.body && req.body.itemId){
+      User.findOneAndUpdate({_id : req.user._id},{$push : {wishlist : mongoose.Types.ObjectId(req.body.itemId)}},(err,user)=>{
+        if(err){
+          return res.status(400).send({success : false});
+        }else{
+          return res.status(200).send({success : true});
+        }
+      })
+    }else{
+      throw 'required fields error';
+    }
+  }catch(err){
+    return res.status(400).send({success : false});
+  }
+}
+
+export function getCartItems(req,res){
+  try{
+    if(req.user){
+      User.findById(req.user._id).populate({path :'cart.item',model : 'Medicine'}).then(oUser=>{
+        return res.status(200).send(oUser.cart);
+      }).catch(err=>{
+        return res.status(400).send({error : err});
+      })
+    }else{
+      throw 'No User found!';
+    }
+  }catch(err){
+    return res.status(400).send({error : err});
+  }
+}
+
+
+export function getWishList(req,res){
+  try{
+    if(req.user){
+      User.findById(req.user._id).populate({path :'wishlist',model : 'Medicine'}).then(oUser=>{
+        return res.status(200).send(oUser.wishlist);
+      }).catch(err=>{
+        return res.status(400).send({error : err});
+      })
+    }else{
+      throw 'No User found!';
+    }
+  }catch(err){
+    return res.status(400).send({error : err});
+  }
 }

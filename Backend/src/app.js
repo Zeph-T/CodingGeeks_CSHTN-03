@@ -15,8 +15,7 @@ mongoose
   .catch((err) => {
     console.log('Error connecting to muxdb' + err.stack)
   })
-console.log(envVariables.db_string);
-console.log(process.env.MEDZONE_DB_CONN_STRING);
+
 const port = 8000
 const app = express()
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: false }))

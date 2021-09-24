@@ -13,7 +13,9 @@
   margin-right: 10px;
   flex-basis: 80%;
 }
-
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: 	#90EE90 !important;
+}
 .search-bar {
   flex-basis: 55%;
 }

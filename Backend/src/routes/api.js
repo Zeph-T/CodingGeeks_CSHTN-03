@@ -8,7 +8,7 @@ module.exports = (router) => {
         if(isValid){
             next();
         }else{
-            res.status(400);
+            res.status(200);
             return res.send({error:'Auth Token Expired'});
         }
     }).catch(err=>{
@@ -25,5 +25,9 @@ module.exports = (router) => {
   router.get('/itemsForHome',itemApi.getItemsForHome);
   router.get('/category/:category',itemApi.viewAllCategoryItems);
   router.post('/getExtractedItems',itemApi.checkForItems);
-  // router.get('/convertArray',itemApi.filterStringsToArrays);
+  router.post('/addToCart',itemApi.addToCart);
+  router.post('/addToWishlist',itemApi.addToWishList);
+  router.get('/getCart',itemApi.getCartItems);
+  router.get('/getWishList',itemApi.getWishList);
+  router.get('/product/:id', itemApi.getProduct);
 }
