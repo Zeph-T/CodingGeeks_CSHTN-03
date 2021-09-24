@@ -20,7 +20,7 @@ export default function CheckoutForm() {
 
     const card = elements.getElement(CardElement);
     const result = await stripe.createToken(card);
-
+    // TODO : make a backend call
     if (result.error) {
       // Show error to your customer.
       console.log(result.error.message);
