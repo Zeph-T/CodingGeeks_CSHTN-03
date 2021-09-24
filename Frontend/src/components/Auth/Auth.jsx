@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Button,
@@ -39,7 +39,10 @@ const SignUp = (props) => {
     }),
     password: Joi.string().required().min(6).label("Password"),
   };
-
+   useEffect(() => {
+       const jwt = localStorage.getItem("token");
+      if (jwt) window.location = '/';
+   }, []);
   let onForgotPassword = () => {
     setProgress(true);
     httpService.post(api.BASE_URL + api.FORGOT_PASSWORD , {email : email}).then(response=>{
