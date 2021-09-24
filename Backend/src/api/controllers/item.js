@@ -1,5 +1,6 @@
 import Item from '../models/item'
 import * as apiHelper from './apiHelper';
+import mongoose from 'mongoose';
 import Q, { async } from 'q';
 import User from '../models/user';
 export async function filterStringsToArrays(req, res) {
@@ -93,12 +94,35 @@ export async function checkForItems(req, res) {
 export function addToCart(req,res){
   try{
     if(req.body && req.body.itemId && req.body.qty){
-      User.findOneAndUpdate({_id : req.user._id} , {$push : { cart : {item : mongoose.Types.ObjectId(req.body.itemId) , qty : req.body.qty} } },(err,oUser)=>{
-        if(err){
-          return res.status(400).send({success : false});
-        }else{
-          return res.status(200).send({success : true});
+      User.findOne({_id : req.user._id}).then(oUser=>{
+        if(oUser){
+          let present = oUser.cart.filter(oItem=>mongoose.Types.ObjectId(oItem.item).toString() === mongoose.Types.ObjectId(req.body.itemId).toString())
+          if(present.length > 0){
+            User.findOneAndUpdate({_id : req.user._id} , {$pull : {cart:{_id : present[0]._id } }},(err,doc)=>{
+              if(err){
+                return res.status(400).send(err);
+              }else{
+                User.findOneAndUpdate({_id : req.user._id} , {$push : {cart : {item : mongoose.Types.ObjectId(req.body.itemId) ,qty : parseInt(req.body.qty) }}},(err,doc)=>{
+                  if(err){
+                    return res.status(400).send(err);
+                  }else{
+                    return res.status(200).send({success : true});
+                  }
+                })
+              }
+            })
+          }else{
+            User.findOneAndUpdate({_id : req.user._id} , {$push : {cart : {item : mongoose.Types.ObjectId(req.body.itemId) ,qty : parseInt(req.body.qty) }}},(err,doc)=>{
+              if(err){
+                return res.status(400).send(err);
+              }else{
+                return res.status(200).send({success : true});
+              }
+            })
+          }   
         }
+      }).catch(err=>{
+            return res.status(400).send({success : false});
       })
     }else{
       throw 'required fields error';

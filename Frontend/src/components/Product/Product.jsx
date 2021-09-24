@@ -14,6 +14,7 @@ import { api } from "../../utilities";
 import http from "../../services/httpService";
 import { Form } from "react-bootstrap";
 import useStyles from "./styles";
+import WrappedButton from "../common/WrappedButton";
 
 const Product = (props) => {
   const [cart, setCart] = useState([]);
@@ -28,11 +29,13 @@ const Product = (props) => {
   //   quantity: 4,
   // };
   const [product, setProduct] = useState({});
+  const [cartProgress , setCartProgress] = useState(false);
+  const [wishProgress , setWishProgress] = useState(false);
   const [loading, setLoading] = useState(true);
+  const jwt = localStorage.getItem("token");
   useEffect(() => {
     async function Start() {
-      const jwt = localStorage.getItem("token");
-      const { data } = await http.get(api.BASE_URL + api.GET_PRODUCT + props.computedMatch.params.id, {
+      const { data } = await http.get(api.BASE_URL + api.GET_PRODUCT + props.match.params.id, {
         headers: { accesstoken: jwt },
       });
       setProduct(data);
@@ -43,10 +46,30 @@ const Product = (props) => {
   const classes = useStyles();
   const [qty, setQty] = useState(1);
   const addToCartHandler = () => {
-    
+    setCartProgress(true);
+    http.post(api.BASE_URL + api.ADD_CART,{itemId : product._id , qty :qty},{headers: { accesstoken: jwt }}).then(response=>{
+      if(response.data.success){
+        props.openSnackBar('Added To Cart');
+      }else{
+        props.openSnackBar('Error Adding to Cart');
+      }
+    }).catch(err=>{
+      props.openSnackBar(err);
+    });
+    setCartProgress(false);
   };
    const addToWishListHandler = () => {
-     
+    setCartProgress(true);
+    http.post(api.BASE_URL + api.ADD_TO_WISHLIST,{itemId : product._id },{headers: { accesstoken: jwt }}).then(response=>{
+      if(response.data.success){
+        props.openSnackBar('Added To Wishlist');
+      }else{
+        props.openSnackBar('Error Adding to Cart');
+      }
+    }).catch(err=>{
+      props.openSnackBar(err);
+    });
+    setCartProgress(false);
    };
   const handleSubmit = () => {};
   if (loading === true) {
@@ -77,7 +100,7 @@ const Product = (props) => {
               <p className="product-manuf">By {product.manufacturer}</p>
               <hr />
               <p>
-                Price: <span className="price">&#x20b9; {product.price}</span>
+                Price: <span className="price">&#x20b9;  {product.cost}</span>
               </p>
               Category:{" "}
               <span className="prod-category"> {product.category}</span>
@@ -101,29 +124,41 @@ const Product = (props) => {
                     value={qty}
                     onChange={(e) => setQty(e.target.value)}
                   >
-                    {[...Array(product.quantity).keys()].map((x) => (
+                    {[...Array(product.qty).keys()].map((x) => (
                       <option key={x + 1} value={x + 1}>
                         {x + 1}
                       </option>
                     ))}
                   </Form.Control>
                 </div>
-                <button
+                <WrappedButton 
+                  disabled={cartProgress}
+                  onClick={addToCartHandler}
+                  style={{ width: "100%",marginTop : '1rem' }}
+                  color="primary"
+                  icon=""
+                  name="add to cart"
+                  buttonKey="loginButton"
+                  variant="contained"
+                />
+                {/* <button
                   type="button"
                   class="btn btn-warning asdf"
                   onClick={addToCartHandler}
                 >
                   Add to Cart
                   <i class="fa fa-shopping-cart fa-lg" aria-hidden="true"></i>
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-primary asdf"
+                </button> */}
+                <WrappedButton 
+                  disabled={wishProgress}
                   onClick={addToWishListHandler}
-                >
-                  Add to Wishlist
-                  <i class="fa fa-shopping-cart fa-lg" aria-hidden="true"></i>
-                </button>
+                  style={{ width: "100%",marginTop : '1rem' }}
+                  color="secondary"
+                  icon=""
+                  name="add to wishlist"
+                  buttonKey="loginButton"
+                  variant="contained"
+                />
               </form>
             </div>
           </Grid>

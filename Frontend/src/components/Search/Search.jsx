@@ -18,7 +18,10 @@ function Search({ searchItem, match }) {
           headers: { accesstoken: jwt },
         }
       );
-      setResults(data.byCategory);
+      let resultData = [];
+      resultData.push(...data.byCategory);
+      resultData.push(...data.byText);
+      setResults(resultData);
       setLoading(false);
     }
     Start();

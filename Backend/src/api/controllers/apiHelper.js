@@ -11,7 +11,8 @@ export const oEmailContextTexts = {
 }
 export const TokenTypes = {
   authToken : 'authToken',
-  ActivationToken  : 'activationToken'
+  ActivationToken  : 'activationToken',
+  passwordResetToken  :'passwordResetToken'
 }
 
 export function sendEmail(email,context,subjectText){
@@ -131,7 +132,7 @@ export function validateToken(token,tokenType,shouldIgnoreExpiration=false){
             deferred.resolve({isValid : true , payload : decoded})
           }
         })
-      }else if(tokenType === 'authToken'){
+      }else if(tokenType === 'authToken' || tokenType === 'passwordResetToken'){
         User.findOne({email : decoded.email}).then(oUser=>{
           deferred.resolve({isValid : true , payload : oUser});
         }).catch(err=>{

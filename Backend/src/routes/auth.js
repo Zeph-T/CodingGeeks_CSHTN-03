@@ -7,5 +7,8 @@ module.exports = (router)=>{
     });
     router.post('/signup',userApi.signup);
     router.post('/login',userApi.login);
+    router.post('/forgotPassword',userApi.forgotPassword);
+    router.post('/verifyPasswordToken' , userApi.verifyPasswordToken);
+    router.post('/resetPassword',userApi.resetPassword);
     router.get('/activateUser/:activationToken',userApi.activateToken);
 }

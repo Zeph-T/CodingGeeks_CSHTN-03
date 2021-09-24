@@ -63,9 +63,9 @@ function App(props) {
         <Route path="/login" render={(props)=><Auth openSnackBar={openSnackBar} {...props}/> } />
         <Route path="/register" render={(props)=><Register openSnackBar={openSnackBar} {...props}/> }  />
         <Route path="/activateUser" render={(props)=> <Activate {...props} />} />
-        <ProtectedRoute
+        <Route
           path="/product/:id"
-          render={(props) => <Product {...props} user={user} />}
+          render={(props) => <Product openSnackBar={openSnackBar} {...props} user={user} />}
         />
         <Route path="/logout" exact component={Logout} />
         <Route path="/search" exact component={Search} />
