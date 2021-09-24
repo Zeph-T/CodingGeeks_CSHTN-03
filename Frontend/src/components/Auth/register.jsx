@@ -42,6 +42,10 @@ const Register = (props) => {
     confirmPassword: Joi.string().required().label("Confirm Password"),
     name: Joi.string().min(3).required().label("Full Name"),
   };
+    useEffect(() => {
+      const jwt = localStorage.getItem("token");
+      if (jwt) window.location = "/";
+    }, []);
   const handleSubmit = async (event) => {
     setLoginIsInProgress(true);
     const options = { abortEarly: false };
