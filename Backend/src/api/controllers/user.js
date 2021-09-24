@@ -7,6 +7,7 @@ import  {envVariables} from "../../config/env";
 import { validateUserEmail , oEmailContextTexts, sendEmail ,TokenTypes, validateToken,validateUser} from "./apiHelper";
 import Q from "q";
 import Item from "../models/item";
+// const require = require('stripe')(process.env.STRIPE_SECRET);
 export function signup(req,res){
     try{
         let userInfo = req.body;
@@ -165,8 +166,8 @@ export function Payment(req,res){
     const user = req.user
     stripe.customers
       .create({
-        email: req.body.stripeEmail,
-        source: req.body.stripeToken,
+        email: req.body.email,
+        source: req.body.token,
         name: user.name,
         address: {
           line1: 'TC 9/4 Old MES colony',
@@ -178,7 +179,7 @@ export function Payment(req,res){
       })
       .then((customer) => {
         return stripe.charges.create({
-          amount: req.amount, // Charing Rs 25
+          amount: req.body.amount, // Charing Rs 25
           description: 'Demo medical Bill',
           currency: 'INR',
           customer: customer.id,

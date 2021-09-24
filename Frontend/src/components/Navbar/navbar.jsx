@@ -16,9 +16,18 @@ import http from "../../services/httpService";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
+import '../../App.css'
 import { Typography } from "@material-ui/core";
 import Cart from "./Cart";
+import httpService from "../../services/httpService";
+import CheckoutForm from "./CheckoutForm";
+import { Elements} from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
+
+const stripePromise = loadStripe(
+  "pk_test_51Iiee4SAPK4NnRb13KoXME97VtkAhUnA8X09Scub7ZhYE5lZwHzBfWCHKvDGRg5Yy4dxhwLmsPSl1B6n4q088tT3000EtpY0yV"
+);
 function Header(props) {
   const [open, setOpen] = useState(false);
   const [cart, setCart] = useState([]);
@@ -30,6 +39,7 @@ function Header(props) {
   const [search, setSearch] = useState("");
   const [cartOpen, setCartOpen] = useState(false);
   const [wishOpen, setwishOpen] = useState(false);
+  const [paymentOpen , setPaymentOpen] = useState(false);
   const jwt = localStorage.getItem("token");
   useEffect(() => {
     async function Start() {
@@ -47,19 +57,12 @@ function Header(props) {
     }
     Start();
     if (url) {
-      fetch("https://medzone-ml.herokuapp.com/getText", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          image_url: url,
-        }),
+      httpService.post("https://medzone-ml.herokuapp.com/getText", {
+          image_url: url
       })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          if (data.error) {
+        .then((response) => {
+          // console.log(response.data);
+          if (response.data.error) {
             props.openSnackBar(
               "Error ocurred while analyzing the prescription"
             );
@@ -72,18 +75,22 @@ function Header(props) {
           props.openSnackBar("Error ocurred!");
         });
     }
-  }, [url]);
+  }, [cart , url]);
 
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const imageStateUpdate = (event) => {
-    console.log(event);
     setImage(event.target.files[0]);
     if (event.target.files) {
       setImageName(event.target.files[0].name);
       setImageType(event.target.files[0].type);
     }
   };
+
+  const onClickCheckout = () => {
+    setCartOpen(false)
+    setPaymentOpen(true);
+  }
 
   const handleCancelDialog = (event) => {
     handleClose();
@@ -104,10 +111,10 @@ function Header(props) {
         .then((data) => {
           setUrl(data.url);
           setOpen(false);
-          console.log(url);
+          // console.log(url);
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     } else {
       props.openSnackBar("The Upload type should be an image!");
@@ -217,16 +224,118 @@ function Header(props) {
           <div>
             {image && <Typography variant="body1"> {imageName} </Typography>}
           </div>
-          {console.log(imageName)}
+          {/* {console.log(imageName)} */}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => handleCancelDialog()}>Cancel</Button>
           <Button onClick={() => postDetails()}>Upload!</Button>
         </DialogActions>
       </Dialog>
-      <Cart cart={cart} cartOpen={cartOpen} setCartOpen={setCartOpen} />
+      <Dialog fullWidth open={paymentOpen}>
+          <DialogContent>
+            <div>
+            <Elements stripe={stripePromise}>
+            <CheckoutForm />
+          </Elements>
+              </div>
+          </DialogContent>
+        </Dialog>
+      <Cart cart={cart} cartOpen={cartOpen} onClickCheckout={onClickCheckout} setCartOpen={setCartOpen} />
     </div>
   );
 }
+
+
+// function CheckoutForm() {
+//   const [isPaymentLoading, setPaymentLoading] = useState(false);
+//   // const stripe = useStripe();
+//   const elements = useElements();
+//   const payMoney = async (e) => {
+//     const token = await stripe.tokens.create({
+//       card: elements.getElement(CardElement)
+//     })
+//     console.log(token);
+//     console.log("token recived");
+//     // const token = await stripe.tokens.create({
+//     //   card: {
+//     //     number: '4242424242424242',
+//     //     exp_month: 9,
+//     //     exp_year: 2022,
+//     //     cvc: '314',
+//     //   },
+//     // });
+//     // e.preventDefault();
+//     // if (!stripe || !elements) {
+//     //   return;
+//     // }
+//     // setPaymentLoading(true);
+//     // const clientSecret = getClientSecret();
+//     // const paymentResult = await stripe.confirmCardPayment(clientSecret, {
+//     //   payment_method: {
+//     //     card: elements.getElement(CardElement),
+//     //     billing_details: {
+//     //       name: "Faruq Yusuff",
+//     //     },
+//     //   },
+//     // });
+//     // setPaymentLoading(false);
+//     // if (paymentResult.error) {
+//     //   alert(paymentResult.error.message);
+//     // } else {
+//     //   if (paymentResult.paymentIntent.status === "succeeded") {
+//     //     alert("Success!");
+//     //   }
+//     // }
+//   };
+
+//   return (
+//     <div
+//       style={{
+//         padding: "3rem",
+//       }}
+//     >
+//       <div
+//         style={{
+//           maxWidth: "500px",
+//           margin: "0 auto",
+//         }}
+//       >
+//         <form
+//           style={{
+//             display: "block",
+//             width: "100%",
+//           }}
+//           onSubmit = {payMoney}
+//         >
+//           <div
+//             style={{
+//               display: "flex",
+//               flexDirection: "column",
+//               alignItems: "center",
+//             }}
+//           >
+//             <CardElement
+//               className="card"
+//               options={{
+//                 style: {
+//                   base: {
+//                     width : '100%'
+//                   } 
+//                 },
+//               }}
+//             />
+//             <button
+//               className="pay-button"
+//               disabled={isPaymentLoading}
+//               onClick={payMoney}
+//             >
+//               {isPaymentLoading ? "Loading..." : "Pay"}
+//             </button>
+//           </div>
+//         </form>
+//       </div>
+//     </div>
+//   );
+// }
 
 export default Header;

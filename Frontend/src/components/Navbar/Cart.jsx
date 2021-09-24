@@ -9,15 +9,17 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CartItem from "./CartItem";
 import WrappedButton from "../common/WrappedButton";
+
 import { Typography } from "@mui/material";
 
-const Cart = ({ cart, setCartOpen, cartOpen }) => {
+
+
+const Cart = ({ cart, setCartOpen, cartOpen ,onClick ,onClickCheckout }) => {
   const getTotal = () => {
     let total = 0;
     for (let item in cart) {
       total += cart[item].item.cost * cart[item].qty;
     }
-    console.log(total);
     return total;
   };
   return (
@@ -48,6 +50,7 @@ const Cart = ({ cart, setCartOpen, cartOpen }) => {
             variant="contained"
             color="primary"
             name="Proceed To CheckOut"
+            onClick={onClickCheckout}
             style={{ marginTop: "1.4rem", marginRight: "1rem" }}
           />
         </div>
