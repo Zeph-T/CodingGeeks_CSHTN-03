@@ -1,5 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
-
+* {
+  text-decoration: none !important; 
+}
+a {
+   box-shadow: none !important;
+   cursor: pointer;
+}
 .left-items {
   display: flex;
   align-items: center;

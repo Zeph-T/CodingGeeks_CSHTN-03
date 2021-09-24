@@ -33,6 +33,10 @@ function Search({ searchItem, match }) {
         <LinearProgress color="secondary" />
       </div>
     );
+  } else if (results.length == 0) {
+    return (
+
+    );
   }
   return (
     <div className="container mt-5">

@@ -16,7 +16,7 @@ const Wishlist = ({ wishlist, setwishOpen, wishOpen }) => {
       maxWidth="lg"
       open={wishOpen}
       onClose={() => setwishOpen(false)}
-      fullWidth={true}
+    fullWidth={true}
     >
       <DialogTitle style={{ textAlign: "center" }}>Wishlist</DialogTitle>
       <DialogContent>

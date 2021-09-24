@@ -7,7 +7,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import logo from "../../static/logo.png";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -22,6 +21,7 @@ import Wishlist from "./Wishlist";
 
 function Header(props) {
   const [open, setOpen] = useState(false);
+  const [Logopen, setLogopen] = useState(false);
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
   const [image, setImage] = useState("");
@@ -128,6 +128,7 @@ function Header(props) {
           <div className="left-items" style={{ padding: "2px 5px" }}>
             <img src={logo} className="brand_logo" width="80px" height="80px" />
             <Button
+              style={{ marginLeft: "2rem" }}
               color="inherit"
               variant="outlined"
               onClick={handleClickOpen}
@@ -162,9 +163,9 @@ function Header(props) {
                 <div className="link">
                   <i class="fa fa-shopping-cart fa-lg" aria-hidden="true"></i>
                 </div>
-                <Button className="link" onClick={() => setCartOpen(!cartOpen)}>
+                <a className="link" onClick={() => setCartOpen(!cartOpen)}>
                   Cart
-                </Button>
+                </a>
               </div>
               <div>
                 <div className="link">
@@ -178,7 +179,7 @@ function Header(props) {
                 <div className="link">
                   <i class="fa fa-sign-out fa-lg" aria-hidden="true"></i>
                 </div>
-                <a className="link" href="/logout">
+                <a className="link" onClick={() => setLogopen(true)}>
                   Sign Out
                 </a>
               </div>
@@ -222,7 +223,7 @@ function Header(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => handleCancelDialog()}>Cancel</Button>
-          <Button onClick={() => postDetails()}>Upload!</Button>
+          <Button onClick={() => postDetails()}>Upload</Button>
         </DialogActions>
       </Dialog>
       <Cart cart={cart} cartOpen={cartOpen} setCartOpen={setCartOpen} />
@@ -231,6 +232,22 @@ function Header(props) {
         wishOpen={wishOpen}
         setwishOpen={setwishOpen}
       />
+      <Dialog
+        open={Logopen}
+        onClose={() => setLogopen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Do you want to logout?"}
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={() => setLogopen(false)}>No</Button>
+          <Button onClick={() => setLogopen(false)} autoFocus>
+            <a href="/logout">Yes</a>
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
