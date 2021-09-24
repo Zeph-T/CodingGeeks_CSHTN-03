@@ -1,14 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { api } from "../../utilities";
-import {
-  Avatar,
-  Button,
-  Paper,
-  Grid,
-  Typography,
-  Container,
-  Slide
-} from "@material-ui/core";
+import { Paper, Container } from "@material-ui/core";
 import http from "../../services/httpService";
 
 const Home = () => {
@@ -25,10 +17,10 @@ const Home = () => {
       setProducts(data);
     }
     Start();
-  }, []);  
+  }, []);
   const slice = (text, count = 20) => {
     return text.slice(0, count) + (text.length > count ? "..." : "");
-  }
+  };
   return (
     <div className="container-fluid">
       {products.map((product) => (
@@ -45,9 +37,12 @@ const Home = () => {
                       alt="medicine"
                       src="https://source.unsplash.com/200x200/?medicine"
                     />
-                     <p className="price-home">
+                    <a
+                      className="price-home"
+                      href={api.BASE_URL + "/product/" + item._id}
+                    >
                       {item.name}
-                    </p>
+                    </a>
                     <p className="product-manuf">By {item.manufacturer}</p>
                     <hr />
                     <p>
@@ -62,6 +57,6 @@ const Home = () => {
       ))}
     </div>
   );
-}
+};
 
 export default Home;
