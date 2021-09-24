@@ -4,7 +4,6 @@ import { api } from "../../utilities";
 import http from "../../services/httpService";
 import { LinearProgress } from "@material-ui/core";
 
-
 function Search({ searchItem, match }) {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -46,9 +45,9 @@ function Search({ searchItem, match }) {
             </Grid>
             <Grid item md={8}>
               <div className="product-info mt-6 pd-4">
-                <Typography component="h1" variant="h5">
+                <a className="price-home" href={"/product/" + product._id}>
                   {product.name}, {product.type}
-                </Typography>
+                </a>
                 <p className="product-manuf">By {product.manufacturer}</p>
                 <hr />
                 <p>
