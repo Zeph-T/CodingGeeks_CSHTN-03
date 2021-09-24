@@ -99,13 +99,11 @@ export async function checkForItems(req, res) {
         .sort({ score: { $meta: 'textScore' } })
         .then((oItem) => {
           items.push(oItem)
-        })
-        .catch((error) => {
-          res.status(400).json({ message: error.message })
-        })
-    })
-  )
-  return res.status(200).send(items)
+      }).catch(error=>{
+        res.status(400).send({ error: error })
+      })
+  }))
+  return res.status(200).send(items);
 }
 
 export function addToCart(req, res) {
