@@ -262,11 +262,19 @@ export function Payment(req, res) {
         customer: customer.id,
       })
     })
-    .then((charge) => {
+    .then(async (charge) => {
       try {
         if (user.pastOrders.length == 0) {
           user.pastOrders = []
         }
+        let cartItems = await req.body.items.map(oItem=>{
+          return {item : mongoose.Types.ObjectId(oItem.item._id),
+          qty: oItem.qty}
+        });
+        user.pastOrders.push({
+          transactionId : charge.id,
+          items : cartItems
+        })
         user.save(async (err) => {
           if (err) {
             console.log(err)

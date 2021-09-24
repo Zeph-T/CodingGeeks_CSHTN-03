@@ -29,11 +29,12 @@ export async function getItems(req, res) {
   const categoryPromise = Item.find({
     categories: { $regex: text, $options: 'i' },
   })
-  Q.all([namePromise, categoryPromise]).then((data, error) => {
+  const manufacturerPromise = Item.find({manufacturer : {$regex : text , $options : 'i'}});
+  Q.all([namePromise, categoryPromise , manufacturerPromise]).then((data, error) => {
     if (error) {
       res.status(400)
     } else {
-      res.status(200).json({ byText: data[0], byCategory: data[1] })
+      res.status(200).json({ byText: data[0], byCategory: data[1] , byManufacturer : data[2] })
     }
   })
 }
@@ -91,19 +92,20 @@ export async function checkForItems(req, res) {
   const words = req.body.words
   let items = []
   await Q.all(
-    words.map((word) => {
-      Item.findOne(
-        { $text: { $search: word } },
-        { score: { $meta: 'textScore' } }
-      )
-        .sort({ score: { $meta: 'textScore' } })
-        .then((oItem) => {
-          items.push(oItem)
-      }).catch(error=>{
-        res.status(400).send({ error: error })
-      })
-  }))
-  return res.status(200).send(items);
+    words.map(async (word) => {
+      try{
+        let oItem = await Item.findOne(
+          { $text: { $search: word } },
+          { score: { $meta: 'textScore' } }
+        ).sort({ score: { $meta: 'textScore' } })
+        if(oItem!== null)
+              items.push(oItem)
+      }catch(error){
+          res.status(400).json({ message: error.message })
+        }
+    })
+  )
+  return res.status(200).send(items)
 }
 
 export function addToCart(req, res) {
@@ -257,5 +259,27 @@ export function removeItemFromCart(req, res) {
     }
   } catch (err) {
     return res.status(400).send({ error: err })
+  }
+}
+
+
+
+export function getPastOrders(req,res){
+  try{
+    if(req.user){
+      User.findOne({_id : req.user._id}).populate({path : 'pastOrders.items.item',model : 'Medicine'}).then(oUser=>{
+        if(oUser && oUser.pastOrders){
+          return res.status(200).send({orders : oUser.pastOrders,success: true});
+        }else{
+          return res.status(200).send({orders : [],success : true})
+        }
+      }).catch(err=>{
+        return res.status(400).send({error: err,success: false});
+      })
+    }else{
+      throw 'required fields error';
+    }
+  }catch(err){
+    return res.status(400).send({error : err,success : false});
   }
 }

@@ -19,4 +19,5 @@ export const api = {
   FORGOT_PASSWORD: '/auth/forgotPassword',
   REMOVE_ITEM_FROM_CART: '/api/removeItemFromCart/',
   MAKE_PAYMENT: '/api/payment',
+  GET_PAST_ORDERS : '/api/getPastOrders'
 }
