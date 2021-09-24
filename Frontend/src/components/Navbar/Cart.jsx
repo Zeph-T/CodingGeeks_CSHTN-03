@@ -63,21 +63,25 @@ const Cart = ({
         </DialogContentText>
         <div className='row d-flex justify-content-between'>
           {' '}
-          <Typography
+          {
+            cart.length > 0 && <Typography
             component='h1'
             variant='h5'
             className='total-amount'
-            style={{ textAlign: 'center' ,display : showCheckout}}
+            style={{ textAlign: 'center' }}
           >
             Total Amount To Pay: {getTotal()} Only
           </Typography>
-          <WrappedButton
+          }
+          {
+            cart.length > 0 && <WrappedButton
             variant='contained'
             color='primary'
             name='Proceed To CheckOut'
             onClick={onClickCheckout}
-            style={{ marginTop: '1.4rem', marginRight: '1rem' ,display : showCheckout}}
+            style={{ marginTop: '1.4rem', marginRight: '1rem' }}
           />
+          }
         </div>
       </DialogContent>
       <DialogActions>

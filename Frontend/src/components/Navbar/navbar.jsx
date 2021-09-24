@@ -110,7 +110,7 @@ function Header(props) {
           setLoading(false);
         });
     }
-  }, [ url]);
+  }, [ url , cart , wishlist]);
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const imageStateUpdate = (event) => {
