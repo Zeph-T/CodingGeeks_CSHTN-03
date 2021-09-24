@@ -20,6 +20,7 @@ const Cart = ({
   onClickCheckout,
   setAmount,
 }) => {
+  const showCheckout = cart.length > 0 ? 'block' : 'hidden';
   const jwt = localStorage.getItem('token')
   const getTotal = () => {
     let total = 0
@@ -56,7 +57,7 @@ const Cart = ({
             component='h1'
             variant='h5'
             className='total-amount'
-            style={{ textAlign: 'center' }}
+            style={{ textAlign: 'center' ,display : showCheckout}}
           >
             Total Amount To Pay: {getTotal()} Only
           </Typography>
@@ -65,7 +66,7 @@ const Cart = ({
             color='primary'
             name='Proceed To CheckOut'
             onClick={onClickCheckout}
-            style={{ marginTop: '1.4rem', marginRight: '1rem' }}
+            style={{ marginTop: '1.4rem', marginRight: '1rem' ,display : showCheckout}}
           />
         </div>
       </DialogContent>
