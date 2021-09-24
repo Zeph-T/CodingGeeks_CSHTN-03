@@ -25,7 +25,8 @@ const userSchema = mongoose.Schema({
         extractedMedicines : [{type:mongoose.Types.ObjectId ,  ref : 'Medicine'}]
     }],
     pastOrders : [{
-        transactionId : String
+        transactionId : String,
+        itemsPurchased  : []
     }]
 })
 

@@ -4,7 +4,10 @@ import { api } from '../../utilities'
 
 import CardSection from './CardSection'
 import '../../App.css'
-export default function CheckoutForm({ amount }) {
+import httpService from '../../services/httpService'
+const jwt = localStorage.getItem('token');
+export default function CheckoutForm({ amount , ...props}) {
+
   const stripe = useStripe()
   const elements = useElements()
 
@@ -20,10 +23,10 @@ export default function CheckoutForm({ amount }) {
     }
 
     function stripeTokenHandler(token) {
-      http
+      httpService
         .post(
           api.BASE_URL + api.MAKE_PAYMENT,
-          { token: token, amount: amount },
+          { token: token.id, amount: amount ,items : props.cart},
           { headers: { accesstoken: jwt } }
         )
         .then((response) => {

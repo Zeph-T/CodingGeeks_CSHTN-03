@@ -18,5 +18,5 @@ export const api = {
   VALIDATE_RESET_PASSWORD_TOKEN: '/auth/verifyPasswordToken',
   FORGOT_PASSWORD: '/auth/forgotPassword',
   REMOVE_ITEM_FROM_CART: '/api/removeItemFromCart/',
-  MAKE_PAYMENT: 'api/payment',
+  MAKE_PAYMENT: '/api/payment',
 }

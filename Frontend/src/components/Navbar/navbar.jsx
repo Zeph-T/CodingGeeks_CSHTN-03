@@ -38,14 +38,11 @@ function Header(props) {
   const [imageName, setImageName] = useState("");
   const [imageType, setImageType] = useState("");
   const [search, setSearch] = useState("");
-  const [cartOpen, setCartOpen] = useState(false);
-  const [wishOpen, setwishOpen] = useState(false);
   const jwt = localStorage.getItem("token");
   const [cartOpen, setCartOpen] = useState(false)
   const [wishOpen, setwishOpen] = useState(false)
   const [paymentOpen, setPaymentOpen] = useState(false)
   const [amount, setAmount] = useState(0);
-  const jwt = localStorage.getItem('token')
   useEffect(() => {
     async function Start() {
       const { data } = await http.get(api.BASE_URL + api.GET_CART, {
@@ -165,7 +162,7 @@ function Header(props) {
                 <div className='link'>
                   <i class='fa fa-user-circle-o fa-lg' aria-hidden='true'></i>
                 </div>
-                <a className='link' href='/me'>
+                <a className='link' href='/profile'>
                   Profile
                 </a>
               </div>
@@ -240,7 +237,7 @@ function Header(props) {
         <DialogContent>
           <div>
             <Elements stripe={stripePromise}>
-              <CheckoutForm amount={amount} />
+              <CheckoutForm amount={amount} cart={cart} openSnackBar={props.openSnackBar} />
             </Elements>
           </div>
         </DialogContent>

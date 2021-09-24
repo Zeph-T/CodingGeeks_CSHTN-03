@@ -14,7 +14,8 @@ import {
 } from './apiHelper'
 import Q from 'q'
 import Item from '../models/item'
-// const require = require('stripe')(process.env.STRIPE_SECRET);
+const stripe = require('stripe')("sk_test_51Iiee4SAPK4NnRb1aF4E4NbekFeZHCFFVswPQnnMQh8cuVqoLNAq7WVc2rR8cdmA0NW5LM663hy8QIil8LmLuJZ7007yioY6R7");
+
 export function signup(req, res) {
   try {
     let userInfo = req.body
@@ -266,7 +267,6 @@ export function Payment(req, res) {
         if (user.pastOrders.length == 0) {
           user.pastOrders = []
         }
-        user.pastOrders.push(charge.id)
         user.save(async (err) => {
           if (err) {
             console.log(err)
@@ -276,7 +276,7 @@ export function Payment(req, res) {
               req.body.items.map(async (oItem) => {
                 try {
                   await Item.findOneAndUpdate(
-                    { _id: mongoose.Types.ObjectId(oItem.Item._id) },
+                    { _id: mongoose.Types.ObjectId(oItem.item._id) },
                     { $inc: { qty: -oItem.qty } }
                   )
                 } catch (err) {
@@ -291,6 +291,13 @@ export function Payment(req, res) {
       } catch (err) {
         res.status(400).json({ message: err })
       }
+    }).catch(err=>{
+      console.log(err);
+      return res.status(400).send({error : err});
+    })
+    .catch(err=>{
+      console.log(err);
+      return res.status(400).send({error : err});
     })
 }
 
