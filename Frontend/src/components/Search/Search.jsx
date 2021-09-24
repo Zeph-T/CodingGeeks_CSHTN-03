@@ -6,6 +6,7 @@ import { ReactComponent as NoData } from "../../static/nodata.svg";
 
 
 import { LinearProgress } from "@material-ui/core";
+import { red } from "@mui/material/colors";
 
 function Search({ searchItem, match }) {
   const [results, setResults] = useState([]);
@@ -40,9 +41,9 @@ function Search({ searchItem, match }) {
     return (
       <div style={{ alignItems: "center" }} className="nodata">
         <h2 className="nodata-text">
-          No results found for search term "{searchItem}"
+          No results found for search term <span style={{color:"red", fontWeight: 400}}> "{searchItem}" </span>
         </h2>
-        <NoData height="400px" width="400px"/>
+        <NoData height="400px" width="400px" />
       </div>
     );
   }

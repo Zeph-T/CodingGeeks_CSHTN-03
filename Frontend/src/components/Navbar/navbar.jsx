@@ -128,7 +128,7 @@ function Header(props) {
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
-      if (!search.length) window.location = "/";
+      if (search && !search.length) window.location = "/";
       else window.location = `/?search=${search}`;
     }
   };
