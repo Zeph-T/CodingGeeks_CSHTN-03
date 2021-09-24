@@ -6,7 +6,7 @@ import axios from 'axios';
 import  {envVariables} from "../../config/env";
 import { validateUserEmail , oEmailContextTexts, sendEmail ,TokenTypes, validateToken,validateUser} from "./apiHelper";
 import Q from "q";
-import Item from "../models/Item";
+import Item from "../models/item";
 export function signup(req,res){
     try{
         let userInfo = req.body;
@@ -98,14 +98,14 @@ export function login(req,res){
             email : userInfo.email
         }).then(user=>{
             if(!user){
-                return res.status(404).send({error : 'Email Id not found!'});
+                return res.status(200).send({error : 'Email Id not found!'});
             }else if(!user.isActive){
-                return res.status(408).send({error : 'You have not activated your account,Click on the Link sent to your Email'});
+                return res.status(200).send({error : 'You have not activated your account,Click on the Link sent to your Email'});
             }
             else if(user.validPassword(userInfo.password)){
             validateUser(req,res,user,false);
             }else{
-                return res.status(404).send({error:'Password Invalid!'});
+                return res.status(200).send({error:'Password Invalid!'});
             }
         }).catch(err=>{
             console.log(err);
@@ -125,7 +125,7 @@ export function forgotPassword(req,res){
         'isActive' : true
       }, function(err, user) {
         if (err || !user) {
-            return res.status(400).send({error : err.stack});
+            return res.status(400).send({error : err});
         }
         if (user) {
           user.passwordResetToken = jwt.sign({
@@ -150,7 +150,7 @@ export function forgotPassword(req,res){
               }
             }).catch(function() {
                 res.status(400);
-                return res.send({error: err.stack});
+                return res.send({error: err});
             });
           })
         }

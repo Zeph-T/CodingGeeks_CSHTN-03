@@ -183,3 +183,20 @@ export function getWishList(req,res){
     return res.status(400).send({error : err});
   }
 }
+export function removeItemFromCart(req,res){
+  try{
+    if(req.user){
+      User.findOneAndUpdate({_id : req.user._id },{$pull : {cart : {_id : mongoose.Types.ObjectId(req.params.id)}}},(err,docs)=>{
+        if(err){
+          return res.status(300).send({error : err});
+        }else{
+          return res.status(200).send({status : 'removed Item from Cart'});
+        }
+      })
+    }else{
+      throw 'No user found';
+    }
+  }catch(err){
+    return res.status(400).send({error : err});
+  }
+}

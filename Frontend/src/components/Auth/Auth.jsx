@@ -6,7 +6,9 @@ import {
   Grid,
   Typography,
   Container,
-  Slide
+  Slide,
+  Dialog , DialogActions, DialogContent , DialogContentText , DialogTitle ,
+  TextField
 } from "@material-ui/core";
 import Joi from "joi-browser";
 import { Alert } from "@material-ui/lab";
@@ -25,6 +27,10 @@ const SignUp = (props) => {
   const [form, setForm] = useState(initialState);
   const [loginIsInProgress, setLoginIsInProgress] = useState(false);
   const [errors, setErrors] = useState([]);
+  const [email , setEmail] = useState("");
+  const [open , setOpen] = useState(false);
+  const [progress , setProgress] = useState(false);
+
   const classes = useStyles();
   const schema = {
     email: Joi.string().email({
@@ -33,6 +39,25 @@ const SignUp = (props) => {
     }),
     password: Joi.string().required().min(6).label("Password"),
   };
+
+  let onForgotPassword = () => {
+    setProgress(true);
+    httpService.post(api.BASE_URL + api.FORGOT_PASSWORD , {email : email}).then(response=>{
+      if(response.data.status){
+        props.openSnackBar(response.data.status);
+        setOpen(false);
+        setProgress(false);
+      }else{
+        setOpen(false);
+        setProgress(false);
+        setEmail("");
+      }
+    }).catch(err=>{
+      setProgress(false);
+      props.openSnackBar(err);
+    })
+  }
+
 
   // function to be on submission of a form
   const handleSubmit = async (event) => {
@@ -107,6 +132,7 @@ const SignUp = (props) => {
                 handleChange={handleChange}
                 type="password"
               />
+              <Typography style={{cursor : 'pointer'}} onClick={()=>setOpen(true)}> Forgot Password? </Typography>
             </Grid>
             <WrappedButton
                   key="loginButton"
@@ -131,6 +157,29 @@ const SignUp = (props) => {
         </Paper>
       </Container>
       </Slide>
+      <Dialog  open={open} onClose={()=>{setOpen(false);}} >
+        <DialogTitle>FORGOT PASSWORD</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Please enter your registered Email ID</DialogContentText>
+          <TextField
+             autoFocus
+             margin="dense"
+             id="code"
+             variant="outlined"
+             label="Enter your  email"
+             type="text"
+             fullWidth
+             value={email}
+             onChange={(event)=>setEmail(event.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={()=>setOpen(false)} color="secondary">
+            Cancel
+          </Button>
+          <WrappedButton name="forgot password" disabled={progress} onClick={onForgotPassword} />
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
