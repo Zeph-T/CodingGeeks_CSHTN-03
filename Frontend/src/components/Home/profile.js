@@ -9,6 +9,9 @@ import httpService from "../../services/httpService";
 import { ReactComponent as NoData } from "../../static/nodata.svg";
 import { api } from "../../utilities";
 import { TextField } from "@mui/material";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
 import logo1 from "../../static/1.jpeg";
 import logo2 from "../../static/2.jpeg";
 import logo3 from "../../static/3.jpeg";
@@ -18,9 +21,44 @@ import logo6 from "../../static/6.jpeg";
 import logo7 from "../../static/7.jpeg";
 import logo8 from "../../static/8.jpeg";
 let logoarray = [logo1, logo2, logo3, logo4, logo5, logo6, logo7, logo8];
+
 const jwt = localStorage.getItem("token");
 
 function Profile(props) {
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 3,
+    initialSlide: 0,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: true
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }
+    ]
+  };
   //   const [buttonSelected, setbuttonSelected] = useState('profile');
   const [progress, setProgress] = useState(false);
   // const data = props.user
@@ -67,7 +105,7 @@ function Profile(props) {
   }, []);
 
   return (
-    <div class="cotainer">
+    <div class="cotainer" style={{padding:'1rem'}}>
       <div className="row ">
         <div className="col-3">
           <div>
@@ -114,27 +152,31 @@ function Profile(props) {
                     style={{ alignItems: "center" }}
                   />
                 )}
+                
                 {products &&
                   products.map((product) => (
-                    <div className="mt-5">
+                    <div className="mt-2" >
                       <Container component="main" maxWidth="xl">
                         <Paper className="" elevation={3}>
                           <div class="d-flex justify-content-between">
-                            <h1
+                            <h3
                               className="category-head"
                               style={{ marginTop: "1rem" }}
                             >
-                              {product.transactionId}
-                            </h1>
+                              Transaction Id :{product.transactionId}
+                            </h3>
                           </div>
                           <hr />
-                          <div className="row d-flex justify-content-between">
+                          <div className="row d-flex justify-content-between" style={{padding:'3rem'}}>
+                          <Slider {...settings}>
                             {product.items.map((item) => (
-                              <div className="col p-2 m-4 prod-info-home">
+                              <div className="col p-1 m-8 prod-info-home" style={{width:'50rem', height:'300px'}}>
                                 <img
                                   className="prod-img-home"
                                   alt="medicine"
                                   src={random()}
+                                  width='auto'
+                                  height='auto'
                                 />
                                 <a
                                   className="price-home"
@@ -154,11 +196,15 @@ function Profile(props) {
                                 </p>
                               </div>
                             ))}
+                         
+                            </Slider>
                           </div>
                         </Paper>
                       </Container>
                     </div>
                   ))}
+                  
+                
               </div>
             </div>
           </div>
