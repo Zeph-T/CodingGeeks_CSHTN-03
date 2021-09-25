@@ -109,7 +109,7 @@ function Header(props) {
           setLoading(false);
         });
     }
-  }, [url]);
+  }, [ url]);
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const imageStateUpdate = (event) => {
