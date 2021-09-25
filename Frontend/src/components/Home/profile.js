@@ -104,7 +104,7 @@ function Profile(props) {
         </div>
         <div className="col-9">
           <div className="animated fadeIn" key={props.user._id}>
-            <div className="card">
+            <div className="card pro-cart">
               <div className="card-body">
                 {products.length == 0 && (
                   <NoData

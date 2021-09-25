@@ -56,8 +56,12 @@ a {
 }
 .nodata-pro {
   position: fixed;
-  left: 50%;
+  left: 60%;
+   top: 50%;
   transform: translate(-50%, -50%);
+}
+.pro-cart {
+  min-height: 600px;
 }
 .search-bar {
   margin-right: 50px;
