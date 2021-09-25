@@ -17,7 +17,7 @@ import logo7 from "../../static/7.jpeg";
 import logo8 from "../../static/8.jpeg";
 let logoarray = [logo1, logo2, logo3, logo4, logo5, logo6, logo7, logo8];
 
-const Wishlist = ({ wishlist, setwishOpen, wishOpen }) => {
+const Wishlist = ({ wishlist, setwishOpen, wishOpen,setWishlist , openSnackBar }) => {
   return (
     <Dialog
       maxWidth="lg"
@@ -29,7 +29,7 @@ const Wishlist = ({ wishlist, setwishOpen, wishOpen }) => {
       <DialogContent>
         <DialogContentText>
           {wishlist.map((product) => (
-            <Item product={product} />
+            <Item openSnackBar={openSnackBar} setWishlist={setWishlist} product={product}/>
           ))}
         </DialogContentText>
       </DialogContent>

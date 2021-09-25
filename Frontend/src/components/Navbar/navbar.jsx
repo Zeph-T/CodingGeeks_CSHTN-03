@@ -22,10 +22,10 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import queryString from "query-string";
 import Wishlist from "./Wishlist";
-import { LinearProgress } from "@material-ui/core";
-import PrescriptionItem from "./PrescriptionItem";
+import { CircularProgress } from "@material-ui/core";
 import PrescriptionResult from "./PrescriptionResults";
-
+import { IconButton } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 const stripePromise = loadStripe(
   "pk_test_51Iiee4SAPK4NnRb13KoXME97VtkAhUnA8X09Scub7ZhYE5lZwHzBfWCHKvDGRg5Yy4dxhwLmsPSl1B6n4q088tT3000EtpY0yV"
 );
@@ -39,13 +39,16 @@ function Header(props) {
   const [imageName, setImageName] = useState("");
   const [imageType, setImageType] = useState("");
   const query = queryString.parse(window.location.search);
-    const [search, setSearch] = useState(query.search);
+  const [search, setSearch] = useState(query.search);
   const jwt = localStorage.getItem("token");
   const [cartOpen, setCartOpen] = useState(false)
   const [wishOpen, setwishOpen] = useState(false)
   const [paymentOpen, setPaymentOpen] = useState(false)
   const [amount, setAmount] = useState(0);
   const [prescription, setPrescription] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [acitivtyText, setActivityText] = useState("");
+
   useEffect(() => {
     async function Start() {
       const { data } = await http.get(api.BASE_URL + api.GET_CART, {
@@ -62,8 +65,9 @@ function Header(props) {
     }
     Start();
     if (url) {
+      setActivityText("Extracting Medicines from the Prescription")
       httpService
-        .post("https://medzone-ml.herokuapp.com/getText", {
+        .post(api.ML_MODEL_API_LOCALHOST, {
           image_url: url,
         })
         .then((response) => {
@@ -72,10 +76,12 @@ function Header(props) {
             props.openSnackBar(
               "Error ocurred while analyzing the prescription"
             );
+            setLoading(false);
             setUrl(null);
           } else {
             console.log(response);
             setUrl(null);
+            setActivityText("Getting Medicines from the Database");
             httpService.post(api.BASE_URL + api.GET_EXTRACTED_ITEMS, {
               words: response.data.result,
             },{headers: { accesstoken: jwt }}
@@ -85,11 +91,14 @@ function Header(props) {
                 props.openSnackBar(
                   "Error ocurred while fetching results from backend"
                 );
+                setLoading(false);
               }
               else {
                 console.log(response);
-                setPrescription(response);
+                setPrescription(response.data);
+                setLoading(false);
               }
+              setActivityText("");
             })
           }
         })
@@ -97,6 +106,7 @@ function Header(props) {
           console.log(err);
           props.openSnackBar("Error ocurred while connecting to the model");
           setUrl(null);
+          setLoading(false);
         });
     }
   }, [url]);
@@ -118,10 +128,12 @@ function Header(props) {
   const handleCancelDialog = (event) => {
     handleClose();
     setImage("");
+    setPrescription([]);
   };
 
   const postDetails = () => {
     if (imageType.includes("image")) {
+      setLoading(true);
       const data = new FormData();
       data.append("file", image);
       data.append("upload_preset", "Instafam");
@@ -133,7 +145,6 @@ function Header(props) {
         .then((res) => res.json())
         .then((data) => {
           setUrl(data.url);
-          setOpen(false);
           // console.log(url);
         })
         .catch((err) => {
@@ -216,7 +227,7 @@ function Header(props) {
           </div>
         </HeaderStyled>
       </div>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} maxWidth='md'>
         <DialogTitle>Upload Prescription</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -247,19 +258,28 @@ function Header(props) {
           </label>
           <div>
             {image && <Typography variant="body1"> {imageName} </Typography>}
+            <div style={{display : 'flex',flexDirection : 'column',alignItems : 'center' , justifyContent : 'center'}}>
+            {loading && <CircularProgress />}
+            <br />
+            {loading && <Typography variant="body1"> {acitivtyText} </Typography>}
+            </div>
           </div>
           {/* {console.log(imageName)} */}
+          {prescription.length>0 && <PrescriptionResult results={prescription} {...props} />}
+          
         </DialogContent>
         <DialogActions>
           <Button onClick={() => handleCancelDialog()}>Cancel</Button>
           <Button onClick={() => postDetails()}>Upload</Button>
         </DialogActions>
+        
       </Dialog>
       <Dialog fullWidth open={paymentOpen}>
+      <IconButton style={{marginLeft: '35rem'}} onClick={()=> setPaymentOpen(false)}><CloseIcon /></IconButton>
         <DialogContent>
           <div>
             <Elements stripe={stripePromise}>
-              <CheckoutForm amount={amount} cart={cart} openSnackBar={props.openSnackBar} />
+              <CheckoutForm setPaymentOpen={setPaymentOpen} openSnackBar={props.openSnackBar} amount={amount} cart={cart} openSnackBar={props.openSnackBar} />
             </Elements>
           </div>
         </DialogContent>
@@ -270,11 +290,14 @@ function Header(props) {
         onClickCheckout={onClickCheckout}
         setCartOpen={setCartOpen}
         setAmount={setAmount}
+        setCart={setCart}
       />
       <Wishlist
         wishlist={wishlist}
         wishOpen={wishOpen}
         setwishOpen={setwishOpen}
+        setWishlist={setWishlist}
+        openSnackBar={props.openSnackBar}
       />
       <Dialog
         open={Logopen}
@@ -292,7 +315,7 @@ function Header(props) {
           </Button>
         </DialogActions>
       </Dialog>
-      <PrescriptionResult results={prescription} {...props} />
+     
     </div>
   );
 }

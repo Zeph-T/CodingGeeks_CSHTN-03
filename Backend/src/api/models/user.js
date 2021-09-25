@@ -12,13 +12,13 @@ const userSchema = mongoose.Schema({
     cart  :[{
         item :{
             type:mongoose.Types.ObjectId,
-            ref : 'Medicince'
+            ref : 'Medicine'
         },
         qty : Number
     }],
     wishlist : [{
         type:mongoose.Types.ObjectId,
-        ref : 'Medicince'
+        ref : 'Medicine'
     }],
     scannedPrescriptions : [{
         prescription_url : String,

@@ -19,7 +19,10 @@ const Cart = ({
   onClick,
   onClickCheckout,
   setAmount,
+  setCart,
+  openSnackBar
 }) => {
+  const showCheckout = cart.length > 0 ? 'block' : 'hidden';
   const jwt = localStorage.getItem('token')
   const getTotal = () => {
     let total = 0
@@ -30,11 +33,19 @@ const Cart = ({
     return total
   }
   const handleRemove = async (id) => {
-    const { data } = await http.put(
-      api.BASE_URL + api.REMOVE_ITEM_FROM_CART + `/${id}`,
-      { headers: { accesstoken: jwt } }
-    )
-    console.log(data)
+    http.get(
+      api.BASE_URL + api.REMOVE_ITEM_FROM_CART  + `/${id}`,
+    { headers: { accesstoken: jwt } }
+    ).then(response=>{
+      if(response){
+        console.log(response.data);
+        setCart(response.data.items);
+        openSnackBar('removed Item from cart')
+      }
+    }).catch(err=>{
+      console.log(err);
+
+    })
   }
   return (
     <Dialog
@@ -52,7 +63,8 @@ const Cart = ({
         </DialogContentText>
         <div className='row d-flex justify-content-between'>
           {' '}
-          <Typography
+          {
+            cart.length > 0 && <Typography
             component='h1'
             variant='h5'
             className='total-amount'
@@ -60,13 +72,16 @@ const Cart = ({
           >
             Total Amount To Pay: {getTotal()} Only
           </Typography>
-          <WrappedButton
+          }
+          {
+            cart.length > 0 && <WrappedButton
             variant='contained'
             color='primary'
             name='Proceed To CheckOut'
             onClick={onClickCheckout}
             style={{ marginTop: '1.4rem', marginRight: '1rem' }}
           />
+          }
         </div>
       </DialogContent>
       <DialogActions>
