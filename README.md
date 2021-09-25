@@ -47,4 +47,45 @@ After the processing is done the model return an arrey of words which will furth
 ### ML Model
 The model relys on PyTesseract library where the received image of the prescrition will be processed to extract the words which further undergo cleaning with the help of NLP libraries such as nltk to finally output the list of words which could possibly be medicines.
 ***
+  
+  ### Setting Up the Project 🔧
+
+
+#### Clone the repo
+
+   ```sh
+   git clone https://github.com/Zeph-T/SkillKits.git
+   ```
+* __Frontend__
+1. change the directory to Frontend
+    ```
+    cd Frontend
+    ```
+2. Install NPM packages
+
+   ```sh
+   npm install
+   ```
+3. Create a .env file and add values accordingly.
+4. Run the server (Note : Make sure you start the Backend server before the Frontend server to avoid unnecessary errors.)
+   ```
+   npm start 
+   ```
+
+* __Backend__
+1. change the directory to Backend
+    ```
+    cd Frontend
+    ```
+2. Install NPM packages
+
+   ```sh
+   npm install
+   ```
+3. Create a .env file and add values accordingly.
+4. Run the server 
+   ```
+   npm start 
+   ```
+
 
