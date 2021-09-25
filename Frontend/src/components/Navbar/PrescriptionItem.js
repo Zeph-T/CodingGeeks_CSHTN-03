@@ -11,6 +11,7 @@ const PrescriptionItem = (props) => {
     const [cartProgress, setCartProgress] = useState(false);
     const [wishProgress, setWishProgress] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [maxQuantity, setMaxQuantity] = useState(props.product.qty);
     const [quantity, setQuantity] = useState(1);
     const jwt = localStorage.getItem("token");
     const addToWishListHandler = () => {
@@ -44,10 +45,10 @@ const PrescriptionItem = (props) => {
     const handleQuantityChange = (event) => {
         if (event.target.value < 1)
             setQuantity(1);
-        if (event.target.value >quantity)
-        setQuantity(quantity);
+        else if (event.target.value >= maxQuantity)
+            setQuantity(maxQuantity)
         else
-        setQuantity(event.target.value)
+        setQuantity(event.target.value);
     }
 
 
@@ -74,7 +75,7 @@ const PrescriptionItem = (props) => {
                         </p>
                         <br /> <br />
                         {props.product.qty > 0 && (
-                            <span className="in-stock">In Stock. </span>
+                            <span className="in-stock">In Stock. {maxQuantity} Available </span>
                         )}
                         {props.product.qty == 0 && (
                             <span className="out-of-stock">Out of Stock </span>
