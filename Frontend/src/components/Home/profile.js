@@ -6,6 +6,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import { Paper, Container, LinearProgress } from "@material-ui/core";
 import WrappedButton from "../common/WrappedButton";
 import httpService from "../../services/httpService";
+import { ReactComponent as NoData } from "../../static/nodata.svg";
 import { api } from "../../utilities";
 import { TextField } from "@mui/material";
 import logo1 from "../../static/1.jpeg";
@@ -105,6 +106,14 @@ function Profile(props) {
           <div className="animated fadeIn" key={props.user._id}>
             <div className="card">
               <div className="card-body">
+                {products.length == 0 && (
+                  <NoData
+                    height="400px"
+                    width="400px"
+                    className="nodata-pro"
+                    style={{ alignItems: "center" }}
+                  />
+                )}
                 {products &&
                   products.map((product) => (
                     <div className="mt-5">

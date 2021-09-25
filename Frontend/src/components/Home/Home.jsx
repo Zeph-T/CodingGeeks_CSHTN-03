@@ -69,7 +69,6 @@ const Home = (props) => {
                   />
                 </a>
               </div>
-
               <hr />
               <div className="row d-flex justify-content-between">
                 {product.items.map((item) => (

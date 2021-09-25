@@ -54,6 +54,11 @@ a {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+.nodata-pro {
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 .search-bar {
   margin-right: 50px;
   padding: 10px 10px;

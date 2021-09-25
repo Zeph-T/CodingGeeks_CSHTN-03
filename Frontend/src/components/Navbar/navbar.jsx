@@ -45,10 +45,7 @@ function Header(props) {
   const [wishOpen, setwishOpen] = useState(false)
   const [paymentOpen, setPaymentOpen] = useState(false)
   const [amount, setAmount] = useState(0);
-  //var a = false;
   const [prescription, setPrescription] = useState([]);
-
-
   useEffect(() => {
     async function Start() {
       const { data } = await http.get(api.BASE_URL + api.GET_CART, {
@@ -102,7 +99,7 @@ function Header(props) {
           setUrl(null);
         });
     }
-  }, [ url]);
+  }, [url]);
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const imageStateUpdate = (event) => {
