@@ -20,14 +20,14 @@ Once you are logged in, the top navbar will contain the button to add a prescrit
 ### Product Screen
 The users will be directed to this screen whenever they click on a product where the entire details of the Product(Medicine will be present). They can add the corresponding medicine with the quantity they need to their cart or thier whishlist if they are loggedin.
 
-###Cart Screen
+### Cart Screen
 The user would be able to navigate to their cart with the help of the button present in the navbar.
 This screen contains the list of products that are persent in the users cart where they would be able to change the quantity and make payments.
 
-###Payment Screen
+### Payment Screen
 The user will be able be complete their payments by entering their card details(dummy).
 
-###Prescrition processing screen
+### Prescrition processing screen
 The user is directed to add thier electronic copy of thier prescrition. Upon successful upload the image will passed on to be ML model which will be deployed as a microservice with the help of docker.
 After the processing is done the model return an arrey of words which will further be passed on to the backend which responses with a list of items
 
@@ -44,7 +44,7 @@ After the processing is done the model return an arrey of words which will furth
 * __Deployment:__ Heroku, Netlify
 * __Tools:__ Git
 
-###ML Model
+### ML Model
 The model relys on PyTesseract library where the received image of the prescrition will be processed to extract the words which further undergo cleaning with the help of NLP libraries such as nltk to finally output the list of words which could possibly be medicines.
 ***
 
